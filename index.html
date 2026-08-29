@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Political Simulator - 2D Edition</title>
+    <style>
+        :root {
+            --primary-color: #ff9933;
+            --secondary-color: #138808;
+            --dark-bg: #121212;
+            --card-bg: #1e1e1e;
+            --text-color: #e0e0e0;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: var(--card-bg);
+            padding: 20px;
+            box-sizing: border-box;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #888;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            background: #2d2d2d;
+            border: 1px solid #444;
+            color: #fff;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary-color);
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background: #e68a2e;
+        }
+        #dashboard {
+            display: none;
+        }
+        .stat-box {
+            background: #2d2d2d;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Character Creation Screen (Section 3) -->
+    <div id="creation-screen">
+        <h1>Political Simulator 2D</h1>
+        <div class="subtitle">Character Creation (Political Career Start)</div>
+        
+        <div class="form-group">
+            <label for="char-name">Leader Name:</label>
+            <input type="text" id="char-name" placeholder="Enter your name">
+        </div>
+
+        <div class="form-group">
+            <label for="char-age">Age:</label>
+            <input type="number" id="char-age" value="35" min="25" max="90">
+        </div>
+
+        <div class="form-group">
+            <label for="char-gender">Gender:</label>
+            <select id="char-gender">
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="char-ideology">Political Ideology:</label>
+            <select id="char-ideology">
+                <option value="Centre">Centre</option>
+                <option value="Center-Left">Center-Left</option>
+                <option value="Center-Right">Center-Right</option>
+                <option value="Left-Wing">Left-Wing</option>
+                <option value="Right-Wing">Right-Wing</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="char-state">Home State:</label>
+            <input type="text" id="char-state" value="Uttarakhand">
+        </div>
+
+        <div class="form-group">
+            <label for="char-constituency">Lok Sabha Constituency:</label>
+            <input type="text" id="char-constituency" value="Almora">
+        </div>
+
+        <button onclick="startCareer()">Begin Political Career</button>
+    </div>
+
+    <!-- Main Dashboard Screen -->
+    <div id="dashboard">
+        <h1>Dashboard</h1>
+        <div class="subtitle" id="dash-subtitle">Political Career Active</div>
+        
+        <div class="stat-box">
+            <strong>Name:</strong> <span id="disp-name"></span><br>
+            <strong>Age:</strong> <span id="disp-age"></span> years<br>
+            <strong>Ideology:</strong> <span id="disp-ideology"></span><br>
+            <strong>Constituency:</strong> <span id="disp-constituency"></span> (<span id="disp-state"></span>)
+        </div>
+
+        <div class="stat-box">
+            <strong>Political Reputation:</strong> <span id="disp-rep">50</span> / 100<br>
+            <strong>Party Status:</strong> <span id="disp-party">Independent</span>
+        </div>
+
+        <button onclick="alert('Next Step: Political Party selection and 543 constituencies database will be added!')">Next Step</button>
+    </div>
+</div>
+
+<script>
+    function startCareer() {
+        const name = document.getElementById('char-name').value;
+        if(!name.trim()) {
+            alert('Please enter your leader name!');
+            return;
+        }
+        
+        document.getElementById('disp-name').innerText = name;
+        document.getElementById('disp-age').innerText = document.getElementById('char-age').value;
+        document.getElementById('disp-ideology').innerText = document.getElementById('char-ideology').value;
+        document.getElementById('disp-constituency').innerText = document.getElementById('char-constituency').value;
+        document.getElementById('disp-state').innerText = document.getElementById('char-state').value;
+
+        document.getElementById('creation-screen').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
+    }
+</script>
+
+</body>
+              </html>
+  
