@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Political Simulator - 2D Edition</title>
+    <title>Political Simulator - Real-Time Edition</title>
     <style>
         :root {
             --primary-color: #ff9933;
@@ -245,30 +245,47 @@
         <button class="secondary-btn" onclick="backToPartyHub()">Back</button>
     </div>
 
-    <!-- Screen 4: Main Dashboard (90 Days, Budget & Campaign) -->
+    <!-- Screen 4: Real-Time Campaign & Prime Minister Term Dashboard -->
     <div id="screen-dashboard" class="screen">
-        <h1>Election Campaign Dashboard</h1>
-        <div class="subtitle">90 Days to General Elections</div>
+        <h1>Prime Minister Term Simulation</h1>
+        <div class="subtitle">Live Real-Time Clock Engine Active</div>
         
         <div class="stat-box">
-            <strong>Leader Name:</strong> <span id="disp-name"></span><br>
-            <strong>Age/Gender:</strong> <span id="disp-age"></span> years (<span id="disp-gender"></span>)<br>
-            <strong>Ideology & Constituency:</strong> <span id="disp-ideology"></span> | <span id="disp-constituency"></span> (<span id="disp-state"></span>)
+            <strong>Leader:</strong> <span id="disp-name"></span> | <span id="disp-party"></span><br>
+            <strong>Constituency:</strong> <span id="disp-constituency"></span> (<span id="disp-state"></span>)<br>
+            <strong>Ideology:</strong> <span id="disp-ideology"></span>
+        </div>
+
+        <div class="stat-box" style="border-left: 4px solid var(--primary-color); background: #1a1a1a;">
+            <div style="font-size: 16px; font-weight: bold; margin-bottom: 8px; color: var(--primary-color); text-align: center;">
+                🕒 In-Game Clock / Calendar
+            </div>
+            <div style="font-size: 20px; text-align: center; font-weight: bold; margin-bottom: 10px; color: #fff;" id="live-clock-display">
+                Year 1 | Month 1 | Day 1 - 00:00
+            </div>
+            <div style="font-size: 13px; color: #ccc;">
+                <strong>Campaign Budget:</strong> ₹<span id="disp-budget">1000</span> Crore<br>
+                <strong>Public Support:</strong> <span id="disp-support">15</span>%
+            </div>
         </div>
 
         <div class="stat-box">
-            <strong>Political Affiliation:</strong> <span id="disp-party"></span><br>
-            <span id="disp-leadership-info"></span>
-            <strong>Campaign Budget:</strong> ₹1000 Crore<br>
-            <strong>Time Remaining:</strong> 90 Days
+            <strong>Active Actions:</strong>
+            <button onclick="performAction('rally', 50, 4)" style="margin-top: 8px; background: #2196F3;">📢 Organize National Rally (₹50 Cr, +4% Support)</button>
+            <button onclick="performAction('ads', 30, 2)" class="secondary-btn" style="background: #9c27b0; color:#fff;">📺 National Media Campaign (₹30 Cr, +2% Support)</button>
         </div>
-
-        <button onclick="alert('Campaign actions will start here!')">Start Campaigning</button>
     </div>
 </div>
 
 <script>
     let playerData = {};
+    let gameTimeMinutes = 0; 
+    let gameClockTimer = null;
+
+    let gameStats = {
+        budget: 1000,
+        support: 15
+    };
 
     function submitCharacter() {
         const name = document.getElementById('char-name').value;
@@ -340,16 +357,64 @@
         document.getElementById('disp-state').innerText = playerData.state;
         document.getElementById('disp-party').innerText = playerData.party;
 
-        if(playerData.partyType === "custom") {
-            document.getElementById('disp-leadership-info').innerHTML = `<strong>President:</strong> ${playerData.president}<br><strong>Vice-President:</strong> ${playerData.vp}<br>`;
-        } else {
-            document.getElementById('disp-leadership-info').innerHTML = "";
-        }
-
         document.getElementById('screen-party-hub').classList.remove('active-screen');
         document.getElementById('screen-existing-parties').classList.remove('active-screen');
         document.getElementById('screen-create-party').classList.remove('active-screen');
         document.getElementById('screen-dashboard').classList.add('active-screen');
+
+        startRealTimeClock();
+    }
+
+    function startRealTimeClock() {
+        if (gameClockTimer) clearInterval(gameClockTimer);
+
+        gameClockTimer = setInterval(() => {
+            gameTimeMinutes += 1;
+            updateClockDisplay();
+            saveGameState();
+        }, 1000);
+    }
+
+    function updateClockDisplay() {
+        let totalMins = gameTimeMinutes;
+        let minutes = totalMins % 60;
+        let totalHours = Math.floor(totalMins / 60);
+        let hours = totalHours % 24;
+        let totalDays = Math.floor(totalHours / 24);
+        let days = (totalDays % 30) + 1;
+        let totalMonths = Math.floor(totalDays / 30);
+        let months = (totalMonths % 12) + 1;
+        let years = Math.floor(totalMonths / 12) + 1;
+
+        let timeString = `Year ${years} | Month ${months} | Day ${days} - ${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+        
+        const clockElem = document.getElementById('live-clock-display');
+        if (clockElem) {
+            clockElem.innerText = timeString;
+        }
+    }
+
+    function saveGameState() {
+        const stateToSave = {
+            player: playerData,
+            stats: gameStats,
+            timeMinutes: gameTimeMinutes
+        };
+        localStorage.setItem('politicalSimState', JSON.stringify(stateToSave));
+    }
+
+    function performAction(type, cost, supportGain) {
+        if (gameStats.budget < cost) {
+            alert('Not enough budget!');
+            return;
+        }
+        gameStats.budget -= cost;
+        gameStats.support += supportGain;
+        if (gameStats.support > 100) gameStats.support = 100;
+
+        document.getElementById('disp-budget').innerText = gameStats.budget;
+        document.getElementById('disp-support').innerText = gameStats.support;
+        saveGameState();
     }
 </script>
 
