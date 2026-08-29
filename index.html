@@ -31,8 +31,6 @@
             box-sizing: border-box;
             border-radius: 8px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            max-height: 90vh;
-            overflow-y: auto;
         }
         h1 {
             text-align: center;
@@ -64,32 +62,6 @@
             border-radius: 4px;
             box-sizing: border-box;
         }
-        .party-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            max-height: 300px;
-            overflow-y: auto;
-            margin-bottom: 15px;
-            padding-right: 5px;
-        }
-        .party-card {
-            background: #2d2d2d;
-            border: 1px solid #444;
-            padding: 12px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            transition: 0.2s;
-        }
-        .party-card:hover {
-            border-color: var(--primary-color);
-        }
-        .party-card input {
-            accent-color: var(--primary-color);
-        }
         button {
             width: 100%;
             padding: 12px;
@@ -107,7 +79,7 @@
         }
         .secondary-btn {
             background: #444;
-            margin-top: 5px;
+            margin-top: 10px;
         }
         .secondary-btn:hover {
             background: #555;
@@ -123,14 +95,14 @@
             padding: 15px;
             border-radius: 4px;
             margin-bottom: 15px;
-            line-height: 1.6;
+            text-align: center;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <!-- Screen 1: Character Creation (Section 3) -->
+    <!-- Screen 1: Character Creation Form Only -->
     <div id="screen-character" class="screen active-screen">
         <h1>Political Simulator 2D</h1>
         <div class="subtitle">Character Creation (Political Career Start)</div>
@@ -175,78 +147,35 @@
             <input type="text" id="char-constituency" value="Almora">
         </div>
 
-        <button onclick="goToPartyChoice()">Begin Political Career</button>
+        <button onclick="submitCharacter()">Begin Political Career</button>
     </div>
 
-    <!-- Screen 2: Party Choice Hub (Join Existing vs Create New) -->
+    <!-- Screen 2: Party Hub (Two Options Inside) -->
     <div id="screen-party-hub" class="screen">
         <h1>Political Party</h1>
         <div class="subtitle">Section 4 - Choose Your Path</div>
         
-        <div class="stat-box" style="text-align: center;">
+        <div class="stat-box">
             <p>Welcome, <span id="hub-name" style="color: var(--primary-color); font-weight: bold;"></span>!</p>
-            <p style="font-size: 13px; color: #aaa; margin: 0;">How would you like to proceed with your political journey?</p>
+            <p style="font-size: 13px; color: #aaa; margin: 0;">Select how you want to enter politics:</p>
         </div>
 
-        <button onclick="showExistingParties()">Join Existing Political Party</button>
-        <button class="secondary-btn" onclick="alert('Create Your Own Party feature will be set up next!')">Create Your Own Party</button>
-    </div>
-
-    <!-- Screen 3: Existing Parties List (Sub-Stage 1 with Symbols) -->
-    <div id="screen-existing-parties" class="screen">
-        <h1>Existing Parties</h1>
-        <div class="subtitle">Select a Party to Join</div>
-
-        <div class="party-list">
-            <label class="party-card"><input type="radio" name="party" value="BJP (Lotus)" checked> <span>Bharatiya Janata Party (BJP)</span> <strong>🪷 Lotus</strong></label>
-            <label class="party-card"><input type="radio" name="party" value="INC (Hand)"> <span>Indian National Congress (INC)</span> <strong>✋ Hand</strong></label>
-            <label class="party-card"><input type="radio" name="party" value="AAP (Broom)"> <span>Aam Aadmi Party (AAP)</span> <strong>🧹 Broom</strong></label>
-            <label class="party-card"><input type="radio" name="party" value="AITC (Flowers & Grass)"> <span>All India Trinamool Congress (AITC)</span> <strong>🌿 Flowers & Grass</strong></label>
-            <label class="party-card"><input type="radio" name="party" value="CPIM (Hammer & Sickle)"> <span>Communist Party of India (Marxist) - CPI(M)</span> <strong>☭ Hammer & Sickle</strong></label>
-            <label class="party-card"><input type="radio" name="party" value="BSP (Elephant)"> <span>Bahujan Samaj Party (BSP)</span> <strong>🐘 Elephant</strong></label>
-            <label class="party-card"><input type="radio" name="party" value="JDS (Farmer carrying paddy corn)"> <span>Janata Dal (Secular) - JDS</span> <strong>🌾 Farmer with Paddy</strong></label>
-            <label class="party-card"><input type="radio" name="party" value="RJD (Hurricane Lantern)"> <span>Rashtriya Janata Dal (RJD)</span> <strong>🏮 Hurricane Lantern</strong></label>
-            <label class="party-card"><input type="radio" name="party" value="SP (Bicycle)"> <span>Samajwadi Party (SP)</span> <strong>🚲 Bicycle</strong></label>
-            <label class="party-card"><input type="radio" name="party" value="DMK (Rising Sun)"> <span>Dravida Munnetra Kazhagam (DMK)</span> <strong>🌅 Rising Sun</strong></label>
-            <label class="party-card"><input type="radio" name="party" value="SS (Bow & Arrow)"> <span>Shiv Sena (SS)</span> <strong>🏹 Bow & Arrow</strong></label>
-            <label class="party-card"><input type="radio" name="party" value="NCP (Clock)"> <span>Nationalist Congress Party (NCP)</span> <strong>⏰ Clock</strong></label>
-        </div>
-
-        <button onclick="confirmJoinParty()">Confirm & Proceed to Dashboard</button>
-        <button class="secondary-btn" onclick="backToPartyHub()">Back</button>
-    </div>
-
-    <!-- Screen 4: Main Dashboard -->
-    <div id="screen-dashboard" class="screen">
-        <h1>Dashboard</h1>
-        <div class="subtitle">Political Career Active</div>
-        
-        <div class="stat-box">
-            <strong>Name:</strong> <span id="disp-name"></span><br>
-            <strong>Age:</strong> <span id="disp-age"></span> years<br>
-            <strong>Ideology:</strong> <span id="disp-ideology"></span><br>
-            <strong>Constituency:</strong> <span id="disp-constituency"></span> (<span id="disp-state"></span>)
-        </div>
-
-        <div class="stat-box">
-            <strong>Political Reputation:</strong> <span id="disp-rep">50</span> / 100<br>
-            <strong>Political Party:</strong> <span id="disp-party"></span>
-        </div>
-
-        <button onclick="alert('Next: 543 Constituencies Deep Data & Campaigns!')">Next Step</button>
+        <button onclick="alert('Join Existing Party list will open here next!')">Join Existing Political Party</button>
+        <button class="secondary-btn" onclick="alert('Create Your Own Party form will open here next!')">Create Your Own Party</button>
     </div>
 </div>
 
 <script>
     let playerData = {};
 
-    function goToPartyChoice() {
+    function submitCharacter() {
         const name = document.getElementById('char-name').value;
         if(!name.trim()) {
             alert('Please enter your leader name!');
             return;
         }
         
+        // Save character data
         playerData.name = name;
         playerData.age = document.getElementById('char-age').value;
         playerData.gender = document.getElementById('char-gender').value;
@@ -254,43 +183,12 @@
         playerData.state = document.getElementById('char-state').value;
         playerData.constituency = document.getElementById('char-constituency').value;
 
-        // Display name on hub
+        // Display name on the hub screen
         document.getElementById('hub-name').innerText = playerData.name;
 
-        // Switch screens cleanly
+        // Hide Screen 1 and show Screen 2 cleanly
         document.getElementById('screen-character').classList.remove('active-screen');
         document.getElementById('screen-party-hub').classList.add('active-screen');
-    }
-
-    function showExistingParties() {
-        document.getElementById('screen-party-hub').classList.remove('active-screen');
-        document.getElementById('screen-existing-parties').classList.add('active-screen');
-    }
-
-    function backToPartyHub() {
-        document.getElementById('screen-existing-parties').classList.remove('active-screen');
-        document.getElementById('screen-party-hub').classList.add('active-screen');
-    }
-
-    function confirmJoinParty() {
-        const selectedPartyRadio = document.querySelector('input[name="party"]:checked');
-        if(selectedPartyRadio) {
-            playerData.party = selectedPartyRadio.value;
-        } else {
-            playerData.party = "Independent";
-        }
-
-        // Populate Dashboard
-        document.getElementById('disp-name').innerText = playerData.name;
-        document.getElementById('disp-age').innerText = playerData.age;
-        document.getElementById('disp-ideology').innerText = playerData.ideology;
-        document.getElementById('disp-constituency').innerText = playerData.constituency;
-        document.getElementById('disp-state').innerText = playerData.state;
-        document.getElementById('disp-party').innerText = playerData.party;
-
-        // Switch to Dashboard
-        document.getElementById('screen-existing-parties').classList.remove('active-screen');
-        document.getElementById('screen-dashboard').classList.add('active-screen');
     }
 </script>
 
