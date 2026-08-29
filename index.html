@@ -101,9 +101,6 @@
             color: #cfd8dc;
             cursor: pointer;
         }
-        .party-option:hover, .constituency-row:hover {
-            border-color: #ff9800;
-        }
         .dashboard-card {
             background: #252525;
             padding: 15px;
@@ -157,8 +154,7 @@
     </style>
 </head>
 <body>
-
-<div class="game-container">
+    <div class="game-container">
 
     <!-- SCREEN 1: Character Creation -->
     <div id="screen-character" class="screen active-screen">
@@ -191,7 +187,7 @@
                 <option value="Secularism">Secularism</option>
             </select>
         </div>
-        <button onclick="saveCharacter()">Next Step</button>
+        <button type="button" onclick="saveCharacter()">Next Step</button>
     </div>
 
     <!-- SCREEN 2: Party Hub -->
@@ -363,9 +359,8 @@
         <button onclick="confirmAllTickets()" style="background: #4caf50; color: white;">Confirm Ticket Distribution & Start Campaign</button>
     </div>
 
-</div>
-
-<script>
+        </div>
+        <script>
     let playerData = {
         name: "",
         state: "",
@@ -386,7 +381,6 @@
     let clockSpeed = 1000;
     let allConstituenciesData = [];
 
-    // Master configuration of all states/UTs with exact Lok Sabha seat counts
     const stateSeatCounts = [
         { state: "Uttar Pradesh", count: 80 },
         { state: "Maharashtra", count: 48 },
@@ -424,7 +418,6 @@
         { state: "Sikkim", count: 1 }
     ];
 
-    // Name pools including male and female names with regional touch
     const firstNamesMale = ["Rajesh", "Amit", "Vijay", "Ramesh", "Suresh", "Manoj", "Anil", "Sunil", "Alok", "Pankaj", "Vikram", "Deepak", "Sanjay", "Rahul", "Naveen", "Arun", "Kamesh", "Gopal", "Vinay", "Ashok", "Karan", "Sandeep", "Ajay", "Mohan", "Rakesh"];
     const firstNamesFemale = ["Kavita", "Pooja", "Sunita", "Anita", "Geeta", "Meena", "Suman", "Kusum", "Rekha", "Priyanka", "Neelam", "Saroj", "Mamta", "Radha", "Pushpa", "Asha", "Shashi", "Vandana", "Deepika", "Poonam"];
     const lastNames = ["Pandey", "Sharma", "Verma", "Gupta", "Singh", "Yadav", "Mishra", "Joshi", "Rawat", "Bisht", "Tiwari", "Dubey", "Chauhan", "Thakur", "Reddy", "Iyer", "Rao", "Nair", "Pillai", "Chatterjee", "Banerjee", "Mukherjee", "Sen", "Das", "Patel"];
@@ -463,25 +456,30 @@
     initialize543Constituencies();
 
     function saveCharacter() {
-        const name = document.getElementById('char-name').value;
-        const constituency = document.getElementById('char-constituency').value;
+        const nameInput = document.getElementById('char-name');
+        const constituencyInput = document.getElementById('char-constituency');
+        const stateSelect = document.getElementById('char-state');
+        const ideologySelect = document.getElementById('char-ideology');
 
-        if(!name.trim()) {
+        if (!nameInput || !nameInput.value.trim()) {
             alert('Please enter your leader name!');
             return;
         }
-        if(!constituency.trim()) {
+        if (!constituencyInput || !constituencyInput.value.trim()) {
             alert('Please enter your constituency name!');
             return;
         }
 
-        playerData.name = name;
-        playerData.state = document.getElementById('char-state').value;
-        playerData.constituency = constituency;
-        playerData.ideology = document.getElementById('char-ideology').value;
+        playerData.name = nameInput.value.trim();
+        playerData.state = stateSelect ? stateSelect.value : "Uttarakhand";
+        playerData.constituency = constituencyInput.value.trim();
+        playerData.ideology = ideologySelect ? ideologySelect.value : "Nationalism";
 
-        document.getElementById('screen-character').classList.remove('active-screen');
-        document.getElementById('screen-party-hub').classList.add('active-screen');
+        const screenChar = document.getElementById('screen-character');
+        const screenPartyHub = document.getElementById('screen-party-hub');
+
+        if (screenChar) screenChar.classList.remove('active-screen');
+        if (screenPartyHub) screenPartyHub.classList.add('active-screen');
     }
 
     function goToExistingParties() {
@@ -660,4 +658,7 @@
         alert('All 543 constituency candidate tickets have been successfully confirmed! Entering full active election campaign phase.');
         loadDashboard();
     }
-        
+</script>
+
+</body>
+    </html>
