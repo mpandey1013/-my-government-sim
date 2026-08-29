@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Political Simulation Game - Master Edition</title>
+    <title>Political Simulation Game</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -70,93 +70,13 @@
         button:hover {
             background: #f57c00;
         }
-        .party-list-container, .constituency-list-container {
-            max-height: 300px;
-            overflow-y: auto;
-            border: 1px solid #444;
-            padding: 10px;
-            border-radius: 6px;
-            background: #252525;
-            margin-bottom: 15px;
-        }
-        .party-option, .constituency-row {
-            background: #2a2a2a;
-            padding: 10px;
-            margin-bottom: 8px;
-            border-radius: 6px;
-            border: 1px solid #444;
-        }
-        .constituency-row h4 {
-            margin: 0 0 8px 0;
-            color: #ff9800;
-            font-size: 15px;
-        }
-        .candidates-group {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-        .candidates-group label {
-            font-weight: normal;
-            color: #cfd8dc;
-            cursor: pointer;
-        }
-        .dashboard-card {
-            background: #252525;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            border-left: 4px solid #ff9800;
-        }
-        .timer-box {
-            text-align: center;
-            font-size: 20px;
-            font-weight: bold;
-            color: #e91e63;
-            margin: 15px 0;
-            background: #2d2d2d;
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid #444;
-        }
-        .time-controls {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        .time-controls button {
-            margin-top: 0;
-            background: #37474f;
-            color: #fff;
-        }
-        .time-controls button.active-speed {
-            background: #00897b;
-        }
-        .mcc-banner {
-            background: #b71c1c;
-            color: #fff;
-            padding: 10px;
-            text-align: center;
-            border-radius: 6px;
-            font-weight: bold;
-            margin-bottom: 15px;
-            font-size: 14px;
-        }
-        .counter-badge {
-            background: #37474f;
-            color: #ff9800;
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-weight: bold;
-            display: inline-block;
-            margin-bottom: 10px;
-        }
     </style>
 </head>
 <body>
-    <div class="game-container">
-        
- <!-- SCREEN 1: Character Creation -->
+
+<div class="game-container">
+
+    <!-- SCREEN 1: Character Creation -->
     <div id="screen-character" class="screen active-screen">
         <h2>Political Career Initialization</h2>
         <div class="form-group">
@@ -185,11 +105,12 @@
                 <option value="Socialism">Socialism</option>
                 <option value="Capitalism">Capitalism</option>
                 <option value="Secularism">Secularism</option>
-                        </select>
+            </select>
         </div>
         <button type="button" onclick="saveCharacter()">Next Step</button>
     </div>
- <!-- SCREEN 2: Party Hub -->
+
+    <!-- SCREEN 2: Party Hub -->
     <div id="screen-party-hub" class="screen">
         <h2>Party Selection</h2>
         <p>How would you like to enter politics?</p>
@@ -197,7 +118,48 @@
         <button onclick="goToCreateParty()" style="background: #0288d1; color: white;">Create Political Party</button>
     </div>
 
-    <!-- SCREEN 3A: Existing Parties -->
+</div>
+
+<script>
+    let playerData = {
+        name: "",
+        state: "",
+        constituency: "",
+        ideology: ""
+    };
+
+    function saveCharacter() {
+        const nameInput = document.getElementById('char-name').value.trim();
+        const constituencyInput = document.getElementById('char-constituency').value.trim();
+
+        if (!nameInput || !constituencyInput) {
+            alert('Please fill in your name and constituency!');
+            return;
+        }
+
+        playerData.name = nameInput;
+        playerData.state = document.getElementById('char-state').value;
+        playerData.constituency = constituencyInput;
+        playerData.ideology = document.getElementById('char-ideology').value;
+
+        // स्क्रीन 1 को छुपाकर स्क्रीन 2 (Party Hub) दिखाना
+        document.getElementById('screen-character').classList.remove('active-screen');
+        document.getElementById('screen-party-hub').classList.add('active-screen');
+    }
+
+    function goToExistingParties() {
+        alert('Proceeding to Existing Parties selection...');
+    }
+
+    function goToCreateParty() {
+        alert('Proceeding to Create New Party...');
+    }
+</script>
+
+</body>
+    </html>
+
+<!-- SCREEN 3A: Existing Parties -->
     <div id="screen-existing-parties" class="screen">
         <h2>Select Existing Political Party</h2>
         <div class="party-list-container">
