@@ -31,6 +31,8 @@
             box-sizing: border-box;
             border-radius: 8px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            max-height: 90vh;
+            overflow-y: auto;
         }
         h1 {
             text-align: center;
@@ -61,6 +63,32 @@
             color: #fff;
             border-radius: 4px;
             box-sizing: border-box;
+        }
+        .party-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 280px;
+            overflow-y: auto;
+            margin-bottom: 15px;
+            padding-right: 5px;
+        }
+        .party-card {
+            background: #2d2d2d;
+            border: 1px solid #444;
+            padding: 12px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: 0.2s;
+        }
+        .party-card:hover {
+            border-color: var(--primary-color);
+        }
+        .party-card input {
+            accent-color: var(--primary-color);
         }
         button {
             width: 100%;
@@ -95,14 +123,14 @@
             padding: 15px;
             border-radius: 4px;
             margin-bottom: 15px;
-            text-align: center;
+            line-height: 1.6;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <!-- Screen 1: Character Creation Form Only -->
+    <!-- Screen 1: Character Creation Form -->
     <div id="screen-character" class="screen active-screen">
         <h1>Political Simulator 2D</h1>
         <div class="subtitle">Character Creation (Political Career Start)</div>
@@ -150,50 +178,20 @@
         <button onclick="submitCharacter()">Begin Political Career</button>
     </div>
 
-    <!-- Screen 2: Party Hub (Two Options Inside) -->
+    <!-- Screen 2: Party Hub (Choose Path) -->
     <div id="screen-party-hub" class="screen">
         <h1>Political Party</h1>
         <div class="subtitle">Section 4 - Choose Your Path</div>
         
-        <div class="stat-box">
+        <div class="stat-box" style="text-align: center;">
             <p>Welcome, <span id="hub-name" style="color: var(--primary-color); font-weight: bold;"></span>!</p>
-            <p style="font-size: 13px; color: #aaa; margin: 0;">Select how you want to enter politics:</p>
+            <p style="font-size: 13px; color: #aaa; margin: 0;">How would you like to proceed?</p>
         </div>
 
-        <button onclick="alert('Join Existing Party list will open here next!')">Join Existing Political Party</button>
-        <button class="secondary-btn" onclick="alert('Create Your Own Party form will open here next!')">Create Your Own Party</button>
+        <button onclick="showExistingParties()">Join Existing Political Party</button>
+        <button class="secondary-btn" onclick="showCreateParty()">Create Your Own Political Party</button>
     </div>
-</div>
 
-<script>
-    let playerData = {};
-
-    function submitCharacter() {
-        const name = document.getElementById('char-name').value;
-        if(!name.trim()) {
-            alert('Please enter your leader name!');
-            return;
-        }
-        
-        // Save character data
-        playerData.name = name;
-        playerData.age = document.getElementById('char-age').value;
-        playerData.gender = document.getElementById('char-gender').value;
-        playerData.ideology = document.getElementById('char-ideology').value;
-        playerData.state = document.getElementById('char-state').value;
-        playerData.constituency = document.getElementById('char-constituency').value;
-
-        // Display name on the hub screen
-        document.getElementById('hub-name').innerText = playerData.name;
-
-        // Hide Screen 1 and show Screen 2 cleanly
-        document.getElementById('screen-character').classList.remove('active-screen');
-        document.getElementById('screen-party-hub').classList.add('active-screen');
-    }
-</script>
-
-</body>
-    </html>
     <!-- Screen 3A: Existing Parties List with Symbols -->
     <div id="screen-existing-parties" class="screen">
         <h1>Existing Parties</h1>
@@ -266,5 +264,95 @@
         </div>
 
         <button onclick="alert('Campaign actions will start here!')">Start Campaigning</button>
-        </div>
-            
+    </div>
+</div>
+
+<script>
+    let playerData = {};
+
+    function submitCharacter() {
+        const name = document.getElementById('char-name').value;
+        if(!name.trim()) {
+            alert('Please enter your leader name!');
+            return;
+        }
+        
+        playerData.name = name;
+        playerData.age = document.getElementById('char-age').value;
+        playerData.gender = document.getElementById('char-gender').value;
+        playerData.ideology = document.getElementById('char-ideology').value;
+        playerData.state = document.getElementById('char-state').value;
+        playerData.constituency = document.getElementById('char-constituency').value;
+
+        document.getElementById('hub-name').innerText = playerData.name;
+
+        document.getElementById('screen-character').classList.remove('active-screen');
+        document.getElementById('screen-party-hub').classList.add('active-screen');
+    }
+
+    function showExistingParties() {
+        document.getElementById('screen-party-hub').classList.remove('active-screen');
+        document.getElementById('screen-existing-parties').classList.add('active-screen');
+    }
+
+    function showCreateParty() {
+        document.getElementById('screen-party-hub').classList.remove('active-screen');
+        document.getElementById('screen-create-party').classList.add('active-screen');
+    }
+
+    function backToPartyHub() {
+        document.getElementById('screen-existing-parties').classList.remove('active-screen');
+        document.getElementById('screen-create-party').classList.remove('active-screen');
+        document.getElementById('screen-party-hub').classList.add('active-screen');
+    }
+
+    function confirmExistingParty() {
+        const selectedPartyRadio = document.querySelector('input[name="party"]:checked');
+        playerData.partyType = "existing";
+        playerData.party = selectedPartyRadio ? selectedPartyRadio.value : "Independent";
+        loadDashboard();
+    }
+
+    function confirmCustomParty() {
+        const pName = document.getElementById('custom-party-name').value;
+        const pLogo = document.getElementById('custom-party-logo').value;
+        const pPres = document.getElementById('custom-party-president').value;
+        const pVp = document.getElementById('custom-party-vp').value;
+
+        if(!pName.trim()) {
+            alert('Please enter your party name!');
+            return;
+        }
+
+        playerData.partyType = "custom";
+        playerData.party = `${pName} (${pLogo ? pLogo : 'Custom Symbol'})`;
+        playerData.president = pPres.trim() ? pPres : playerData.name;
+        playerData.vp = pVp.trim() ? pVp : "Not Assigned";
+        loadDashboard();
+    }
+
+    function loadDashboard() {
+        document.getElementById('disp-name').innerText = playerData.name;
+        document.getElementById('disp-age').innerText = playerData.age;
+        document.getElementById('disp-gender').innerText = playerData.gender;
+        document.getElementById('disp-ideology').innerText = playerData.ideology;
+        document.getElementById('disp-constituency').innerText = playerData.constituency;
+        document.getElementById('disp-state').innerText = playerData.state;
+        document.getElementById('disp-party').innerText = playerData.party;
+
+        if(playerData.partyType === "custom") {
+            document.getElementById('disp-leadership-info').innerHTML = `<strong>President:</strong> ${playerData.president}<br><strong>Vice-President:</strong> ${playerData.vp}<br>`;
+        } else {
+            document.getElementById('disp-leadership-info').innerHTML = "";
+        }
+
+        document.getElementById('screen-party-hub').classList.remove('active-screen');
+        document.getElementById('screen-existing-parties').classList.remove('active-screen');
+        document.getElementById('screen-create-party').classList.remove('active-screen');
+        document.getElementById('screen-dashboard').classList.add('active-screen');
+    }
+</script>
+
+</body>
+                </html>
+    
