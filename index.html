@@ -194,4 +194,77 @@
 
 </body>
     </html>
+    <!-- Screen 3A: Existing Parties List with Symbols -->
+    <div id="screen-existing-parties" class="screen">
+        <h1>Existing Parties</h1>
+        <div class="subtitle">Section 4 - Select a Party to Join</div>
+
+        <div class="party-list">
+            <label class="party-card"><input type="radio" name="party" value="Bharatiya Janata Party (BJP) - 🪷 Lotus" checked> <span>Bharatiya Janata Party (BJP)</span> <strong>🪷 Lotus</strong></label>
+            <label class="party-card"><input type="radio" name="party" value="Indian National Congress (INC) - ✋ Hand"> <span>Indian National Congress (INC)</span> <strong>✋ Hand</strong></label>
+            <label class="party-card"><input type="radio" name="party" value="Aam Aadmi Party (AAP) - 🧹 Broom"> <span>Aam Aadmi Party (AAP)</span> <strong>🧹 Broom</strong></label>
+            <label class="party-card"><input type="radio" name="party" value="All India Trinamool Congress (AITC) - 🌿 Flowers & Grass"> <span>All India Trinamool Congress (AITC)</span> <strong>🌿 Flowers & Grass</strong></label>
+            <label class="party-card"><input type="radio" name="party" value="Communist Party of India (Marxist) - ☭ Hammer & Sickle"> <span>CPI(M)</span> <strong>☭ Hammer & Sickle</strong></label>
+            <label class="party-card"><input type="radio" name="party" value="Bahujan Samaj Party (BSP) - 🐘 Elephant"> <span>Bahujan Samaj Party (BSP)</span> <strong>🐘 Elephant</strong></label>
+            <label class="party-card"><input type="radio" name="party" value="Janata Dal (Secular) - 🌾 Farmer with Paddy"> <span>Janata Dal (Secular) - JDS</span> <strong>🌾 Farmer with Paddy</strong></label>
+            <label class="party-card"><input type="radio" name="party" value="Rashtriya Janata Dal (RJD) - 🏮 Hurricane Lantern"> <span>Rashtriya Janata Dal (RJD)</span> <strong>🏮 Hurricane Lantern</strong></label>
+            <label class="party-card"><input type="radio" name="party" value="Samajwadi Party (SP) - 🚲 Bicycle"> <span>Samajwadi Party (SP)</span> <strong>🚲 Bicycle</strong></label>
+            <label class="party-card"><input type="radio" name="party" value="Dravida Munnetra Kazhagam (DMK) - 🌅 Rising Sun"> <span>DMK</span> <strong>🌅 Rising Sun</strong></label>
+            <label class="party-card"><input type="radio" name="party" value="Shiv Sena (SS) - 🏹 Bow & Arrow"> <span>Shiv Sena (SS)</span> <strong>🏹 Bow & Arrow</strong></label>
+            <label class="party-card"><input type="radio" name="party" value="Nationalist Congress Party (NCP) - ⏰ Clock"> <span>Nationalist Congress Party (NCP)</span> <strong>⏰ Clock</strong></label>
+        </div>
+
+        <button onclick="confirmExistingParty()">Confirm Party & Proceed</button>
+        <button class="secondary-btn" onclick="backToPartyHub()">Back</button>
+    </div>
+
+    <!-- Screen 3B: Create Custom Party Form -->
+    <div id="screen-create-party" class="screen">
+        <h1>Create Party</h1>
+        <div class="subtitle">Section 4 - Build Your Own Political Organization</div>
+
+        <div class="form-group">
+            <label for="custom-party-name">Party Name:</label>
+            <input type="text" id="custom-party-name" placeholder="e.g. Lok Vikas Party">
+        </div>
+
+        <div class="form-group">
+            <label for="custom-party-logo">Party Symbol / Logo:</label>
+            <input type="text" id="custom-party-logo" placeholder="e.g. 🐅 Tiger">
+        </div>
+
+        <div class="form-group">
+            <label for="custom-party-president">Party President:</label>
+            <input type="text" id="custom-party-president" placeholder="Enter President Name">
+        </div>
+
+        <div class="form-group">
+            <label for="custom-party-vp">Party Vice-President:</label>
+            <input type="text" id="custom-party-vp" placeholder="Enter Vice-President Name">
+        </div>
+
+        <button onclick="confirmCustomParty()">Create Party & Proceed</button>
+        <button class="secondary-btn" onclick="backToPartyHub()">Back</button>
+    </div>
+
+    <!-- Screen 4: Main Dashboard (90 Days, Budget & Campaign) -->
+    <div id="screen-dashboard" class="screen">
+        <h1>Election Campaign Dashboard</h1>
+        <div class="subtitle">90 Days to General Elections</div>
+        
+        <div class="stat-box">
+            <strong>Leader Name:</strong> <span id="disp-name"></span><br>
+            <strong>Age/Gender:</strong> <span id="disp-age"></span> years (<span id="disp-gender"></span>)<br>
+            <strong>Ideology & Constituency:</strong> <span id="disp-ideology"></span> | <span id="disp-constituency"></span> (<span id="disp-state"></span>)
+        </div>
+
+        <div class="stat-box">
+            <strong>Political Affiliation:</strong> <span id="disp-party"></span><br>
+            <span id="disp-leadership-info"></span>
+            <strong>Campaign Budget:</strong> ₹1000 Crore<br>
+            <strong>Time Remaining:</strong> 90 Days
+        </div>
+
+        <button onclick="alert('Campaign actions will start here!')">Start Campaigning</button>
+        </div>
             
