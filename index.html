@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Political Simulation Game</title>
+    <title>Political Simulation Game - Master Edition</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -154,7 +154,6 @@
     </style>
 </head>
 <body>
-
     <div class="game-container">
 
     <!-- SCREEN 1: Character Creation -->
@@ -241,7 +240,7 @@
         <button onclick="confirmCustomParty()">Register Party & Proceed</button>
     </div>
 
-    <!-- SCREEN 4: Dashboard & Real-Time Simulation Clock -->
+    <!-- SCREEN 4: Dashboard & Simulation Clock -->
     <div id="screen-dashboard" class="screen">
         <h2>Election Dashboard</h2>
         
@@ -266,14 +265,13 @@
 
         <button onclick="startCampaign()" style="background: #e91e63; color: white;">Start Campaign Now</button>
     </div>
-
-            <!-- SCREEN 5: Alliance & Model Code of Conduct Hub -->
+            <!-- SCREEN 5: Alliance & Model Code of Conduct -->
     <div id="screen-alliance" class="screen">
         <h2>Election Commission: Model Code of Conduct</h2>
         <div class="mcc-banner">
             ⚠️ MODEL CODE OF CONDUCT (MCC) IS ACTIVE!
         </div>
-        <p>Elections have been announced. You must decide how your political campaign will contest the elections.</p>
+        <p>Elections have been announced. You must decide how your political campaign will contest.</p>
         
         <div class="form-group">
             <label>Choose Campaign Strategy:</label>
@@ -301,14 +299,14 @@
             </div>
         </div>
 
-        <button onclick="confirmAlliance()" style="background: #4caf50; color: white;">Confirm Strategy & Proceed to Ticket Distribution</button>
+        <button onclick="confirmAlliance()" style="background: #4caf50; color: white;">Confirm Strategy & Proceed to Tickets</button>
         <button onclick="goBackToDashboard()" style="background: #607d8b; color: white;">Back to Dashboard</button>
     </div>
 
-    <!-- SCREEN 6: All 543 Parliamentary Constituencies & Ticket Distribution -->
+    <!-- SCREEN 6: 543 Constituencies Ticket Distribution -->
     <div id="screen-tickets" class="screen">
         <h2>543 Parliamentary Constituencies & Ticket Distribution</h2>
-        <p>Review all 543 Lok Sabha constituencies across India and confirm your candidate tickets by selecting one candidate per seat.</p>
+        <p>Review all 543 Lok Sabha constituencies and confirm candidate tickets.</p>
         
         <div class="counter-badge" id="seat-count-display">Total Constituencies Loaded: 543</div>
 
@@ -353,14 +351,94 @@
             </select>
         </div>
 
-        <div class="constituency-list-container" id="constituency-container">
-            <!-- Dynamic Constituencies populated via JavaScript -->
-        </div>
+        <div class="constituency-list-container" id="constituency-container"></div>
 
-        <button onclick="confirmAllTickets()" style="background: #4caf50; color: white;">Confirm Ticket Distribution & Start Campaign</button>
+        <button onclick="confirmAllTickets()" style="background: #4caf50; color: white;">Confirm Tickets & Open Master Dashboard</button>
     </div>
 
-                </div>
+    <!-- SCREEN 7: Master Campaign Dashboard -->
+    <div id="screen-master-dashboard" class="screen">
+        <h2>Master Election Campaign Dashboard</h2>
+        
+        <div class="dashboard-card" style="border-left-color: #00897b;">
+            <p><strong>Leader:</strong> <span id="master-disp-name"></span> | <strong>Party:</strong> <span id="master-disp-party"></span></p>
+            <p><strong>Remaining Budget:</strong> ₹<span id="master-disp-budget">1000</span> Crores | <strong>Current Strategy:</strong> <span id="master-disp-strategy">Solo</span></p>
+        </div>
+
+        <!-- Secret Intelligence Report / Opinion Poll -->
+        <div class="dashboard-card" style="background: #1a237e; border-left-color: #3f51b5;">
+            <h4 style="margin: 0 0 5px 0; color: #ffeb3b;">📊 Secret Intelligence Report & Opinion Poll</h4>
+            <p id="opinion-poll-text" style="font-size: 13px; margin: 0; color: #e8eaf6;">Analyzing ground reality...</p>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div style="display: flex; gap: 5px; margin-bottom: 15px; flex-wrap: wrap;">
+            <button onclick="switchTab('rallies')" style="flex: 1; margin:0; padding:8px; font-size:13px; background:#37474f;">Rallies</button>
+            <button onclick="switchTab('media')" style="flex: 1; margin:0; padding:8px; font-size:13px; background:#37474f;">Media & Ads</button>
+            <button onclick="switchTab('press')" style="flex: 1; margin:0; padding:8px; font-size:13px; background:#37474f;">Press Meet</button>
+            <button onclick="switchTab('ground')" style="flex: 1; margin:0; padding:8px; font-size:13px; background:#37474f;">Door-to-Door</button>
+        </div>
+
+        <!-- TAB 1: Rallies -->
+        <div id="tab-rallies" class="campaign-tab-content" style="background: #252525; padding: 12px; border-radius: 6px; margin-bottom: 15px;">
+            <h4 style="color: #ff9800; margin-top:0;">Megarally & Public Gatherings</h4>
+            <div class="form-group">
+                <label>Target Region / State:</label>
+                <select id="rally-state">
+                    <option value="Uttarakhand">Uttarakhand</option>
+                    <option value="Uttar Pradesh">Uttar Pradesh</option>
+                    <option value="Maharashtra">Maharashtra</option>
+                    <option value="Bihar">Bihar</option>
+                    <option value="Delhi">Delhi</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Allocate Rally Budget (₹ Crores):</label>
+                <input type="number" id="rally-budget-input" value="50" min="10" max="500">
+            </div>
+            <button onclick="conductMegaRally()" style="background: #ff9800; color: #121212;">Organize Mega Rally & Boost Popularity</button>
+        </div>
+
+        <!-- TAB 2: Media & Ads -->
+        <div id="tab-media" class="campaign-tab-content" style="display: none; background: #252525; padding: 12px; border-radius: 6px; margin-bottom: 15px;">
+            <h4 style="color: #ff9800; margin-top:0;">Print Media & Social Ads Management</h4>
+            <div class="form-group">
+                <label>Ad Campaign Budget (₹ Crores):</label>
+                <input type="number" id="media-budget-input" value="30" min="5" max="300">
+            </div>
+            <button onclick="investInMedia()" style="background: #0288d1; color: white;">Launch Media Campaign</button>
+        </div>
+
+        <!-- TAB 3: Press Conference -->
+        <div id="tab-press" class="campaign-tab-content" style="display: none; background: #252525; padding: 12px; border-radius: 6px; margin-bottom: 15px;">
+            <h4 style="color: #ff9800; margin-top:0;">Live Press Conference</h4>
+            <div class="form-group">
+                <label>Select Stand / Stance:</label>
+                <select id="press-stance">
+                    <option value="aggressive">Aggressive Attack on Opponents</option>
+                    <option value="development">Focus on Development & Jobs</option>
+                    <option value="emotional">Emotional / Regional Appeal</option>
+                </select>
+            </div>
+            <button onclick="holdPressConference()" style="background: #e91e63; color: white;">Hold Press Conference</button>
+        </div>
+
+        <!-- TAB 4: Ground Campaign -->
+        <div id="tab-ground" class="campaign-tab-content" style="display: none; background: #252525; padding: 12px; border-radius: 6px; margin-bottom: 15px;">
+            <h4 style="color: #ff9800; margin-top:0;">Ground & Door-to-Door Campaign</h4>
+            <button onclick="conductGroundCampaign()" style="background: #4caf50; color: white;">Deploy Ground Workers (Cost: ₹10 Cr)</button>
+        </div>
+
+        <!-- Activity Log -->
+        <div class="dashboard-card" style="background: #1e1e1e; max-height: 100px; overflow-y: auto;">
+            <h4 style="margin: 0 0 5px 0; color: #b0bec5; font-size: 13px;">Campaign Activity Log:</h4>
+            <div id="campaign-log" style="font-size: 12px; color: #81c784;">Master Dashboard Active.</div>
+        </div>
+
+        <button onclick="resumeSimulationClockFromDashboard()" style="background: #607d8b; color: white;">Resume Time & Monitor Results</button>
+    </div>
+
+                                                     </div>
     <script>
     let playerData = {
         name: "",
@@ -381,106 +459,69 @@
     let gameTimer = null;
     let clockSpeed = 1000;
     let allConstituenciesData = [];
-    const itemsPerPage = 30; // Lagging fix: Renders 30 seats at a time
+    const itemsPerPage = 30;
 
     const stateSeatCounts = [
-        { state: "Uttar Pradesh", count: 80 },
-        { state: "Maharashtra", count: 48 },
-        { state: "West Bengal", count: 42 },
-        { state: "Bihar", count: 40 },
-        { state: "Tamil Nadu", count: 39 },
-        { state: "Madhya Pradesh", count: 29 },
-        { state: "Karnataka", count: 28 },
-        { state: "Gujarat", count: 26 },
-        { state: "Rajasthan", count: 25 },
-        { state: "Andhra Pradesh", count: 25 },
-        { state: "Kerala", count: 20 },
-        { state: "Telangana", count: 17 },
-        { state: "Assam", count: 14 },
-        { state: "Punjab", count: 13 },
-        { state: "Chhattisgarh", count: 11 },
-        { state: "Haryana", count: 10 },
-        { state: "Delhi", count: 7 },
-        { state: "Uttarakhand", count: 5 },
-        { state: "Jammu and Kashmir", count: 5 },
-        { state: "Himachal Pradesh", count: 4 },
-        { state: "Arunachal Pradesh", count: 2 },
-        { state: "Goa", count: 2 },
-        { state: "Manipur", count: 2 },
-        { state: "Meghalaya", count: 2 },
-        { state: "Tripura", count: 2 },
-        { state: "Dadra and Nagar Haveli and Daman and Diu", count: 2 },
-        { state: "Andaman and Nicobar Islands", count: 1 },
-        { state: "Chandigarh", count: 1 },
-        { state: "Lakshadweep", count: 1 },
-        { state: "Ladakh", count: 1 },
-        { state: "Puducherry", count: 1 },
-        { state: "Mizoram", count: 1 },
-        { state: "Nagaland", count: 1 },
-        { state: "Sikkim", count: 1 }
+        { state: "Uttar Pradesh", count: 80 }, { state: "Maharashtra", count: 48 },
+        { state: "West Bengal", count: 42 }, { state: "Bihar", count: 40 },
+        { state: "Tamil Nadu", count: 39 }, { state: "Madhya Pradesh", count: 29 },
+        { state: "Karnataka", count: 28 }, { state: "Gujarat", count: 26 },
+        { state: "Rajasthan", count: 25 }, { state: "Andhra Pradesh", count: 25 },
+        { state: "Kerala", count: 20 }, { state: "Telangana", count: 17 },
+        { state: "Assam", count: 14 }, { state: "Punjab", count: 13 },
+        { state: "Chhattisgarh", count: 11 }, { state: "Haryana", count: 10 },
+        { state: "Delhi", count: 7 }, { state: "Uttarakhand", count: 5 },
+        { state: "Jammu and Kashmir", count: 5 }, { state: "Himachal Pradesh", count: 4 },
+        { state: "Arunachal Pradesh", count: 2 }, { state: "Goa", count: 2 },
+        { state: "Manipur", count: 2 }, { state: "Meghalaya", count: 2 },
+        { state: "Tripura", count: 2 }, { state: "Dadra and Nagar Haveli and Daman and Diu", count: 2 },
+        { state: "Andaman and Nicobar Islands", count: 1 }, { state: "Chandigarh", count: 1 },
+        { state: "Lakshadweep", count: 1 }, { state: "Ladakh", count: 1 },
+        { state: "Puducherry", count: 1 }, { state: "Mizoram", count: 1 },
+        { state: "Nagaland", count: 1 }, { state: "Sikkim", count: 1 }
     ];
 
-    const firstNamesMale = ["Rajesh", "Amit", "Vijay", "Ramesh", "Suresh", "Manoj", "Anil", "Sunil", "Alok", "Pankaj", "Vikram", "Deepak", "Sanjay", "Rahul", "Naveen", "Arun", "Kamesh", "Gopal", "Vinay", "Ashok", "Karan", "Sandeep", "Ajay", "Mohan", "Rakesh"];
-    const firstNamesFemale = ["Kavita", "Pooja", "Sunita", "Anita", "Geeta", "Meena", "Suman", "Kusum", "Rekha", "Priyanka", "Neelam", "Saroj", "Mamta", "Radha", "Pushpa", "Asha", "Shashi", "Vandana", "Deepika", "Poonam"];
-    const lastNames = ["Pandey", "Sharma", "Verma", "Gupta", "Singh", "Yadav", "Mishra", "Joshi", "Rawat", "Bisht", "Tiwari", "Dubey", "Chauhan", "Thakur", "Reddy", "Iyer", "Rao", "Nair", "Pillai", "Chatterjee", "Banerjee", "Mukherjee", "Sen", "Das", "Patel"];
+    const firstNamesMale = ["Rajesh", "Amit", "Vijay", "Ramesh", "Suresh", "Manoj", "Anil", "Sunil", "Vikram", "Deepak", "Rahul"];
+    const firstNamesFemale = ["Kavita", "Pooja", "Sunita", "Anita", "Geeta", "Meena", "Priyanka", "Rekha"];
+    const lastNames = ["Pandey", "Sharma", "Verma", "Gupta", "Singh", "Yadav", "Mishra", "Rawat", "Bisht", "Tiwari"];
 
     function initialize543Constituencies() {
         if (allConstituenciesData.length === 543) return;
-
         let totalGenerated = 0;
         for (let sObj of stateSeatCounts) {
             for (let i = 1; i <= sObj.count; i++) {
                 totalGenerated++;
                 let seatName = `${sObj.state} Seat ${i}`;
-                
                 if (sObj.state === "Uttarakhand") {
                     const ukNames = ["Tehri Garhwal", "Garhwal", "Almora", "Nainital-Udhamsingh Nagar", "Haridwar"];
                     seatName = ukNames[i - 1];
-                } else if (sObj.state === "Uttar Pradesh" && i <= 10) {
-                    const upNames = ["Varanasi", "Lucknow", "Gorakhpur", "Prayagraj", "Kanpur", "Ghaziabad", "Meerut", "Mathura", "Ayodhya (Faizabad)", "Bareilly"];
-                    seatName = upNames[i - 1];
                 }
-
-                let c1 = `${firstNamesMale[(totalGenerated * 3) % firstNamesMale.length]} ${lastNames[(totalGenerated * 5) % lastNames.length]}`;
-                let c2 = `${firstNamesFemale[(totalGenerated * 7) % firstNamesFemale.length]} ${lastNames[(totalGenerated * 11) % lastNames.length]}`;
-                let c3 = `${firstNamesMale[(totalGenerated * 13) % firstNamesMale.length]} ${lastNames[(totalGenerated * 17) % lastNames.length]}`;
+                let c1 = `${firstNamesMale[totalGenerated % firstNamesMale.length]} ${lastNames[totalGenerated % lastNames.length]}`;
+                let c2 = `${firstNamesFemale[totalGenerated % firstNamesFemale.length]} ${lastNames[(totalGenerated + 2) % lastNames.length]}`;
+                let c3 = `${firstNamesMale[(totalGenerated + 3) % firstNamesMale.length]} ${lastNames[(totalGenerated + 4) % lastNames.length]}`;
 
                 allConstituenciesData.push({
-                    id: totalGenerated,
-                    state: sObj.state,
-                    name: seatName,
-                    candidates: [c1, c2, c3]
+                    id: totalGenerated, state: sObj.state, name: seatName, candidates: [c1, c2, c3]
                 });
             }
         }
     }
-
     initialize543Constituencies();
 
-    // Fixed Character Save Function
     function saveCharacter() {
         const nameInput = document.getElementById('char-name');
         const constituencyInput = document.getElementById('char-constituency');
-        const stateSelect = document.getElementById('char-state');
-        const ideologySelect = document.getElementById('char-ideology');
-
-        if (!nameInput || !nameInput.value.trim()) {
-            alert('Please enter your leader name!');
+        if (!nameInput.value.trim() || !constituencyInput.value.trim()) {
+            alert('Please fill in your name and constituency!');
             return;
         }
-        if (!constituencyInput || !constituencyInput.value.trim()) {
-            alert('Please enter your constituency name!');
-            return;
-        }
-
         playerData.name = nameInput.value.trim();
-        playerData.state = stateSelect ? stateSelect.value : "Uttarakhand";
+        playerData.state = document.getElementById('char-state').value;
         playerData.constituency = constituencyInput.value.trim();
-        playerData.ideology = ideologySelect ? ideologySelect.value : "Nationalism";
+        playerData.ideology = document.getElementById('char-ideology').value;
 
-        document.querySelectorAll('.screen').forEach(scr => scr.classList.remove('active-screen'));
-        const partyHub = document.getElementById('screen-party-hub');
-        if (partyHub) partyHub.classList.add('active-screen');
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
+        document.getElementById('screen-party-hub').classList.add('active-screen');
     }
 
     function goToExistingParties() {
@@ -494,40 +535,28 @@
     }
 
     function confirmExistingParty() {
-        const selectedPartyRadio = document.querySelector('input[name="party"]:checked');
+        const selected = document.querySelector('input[name="party"]:checked');
         playerData.partyType = "existing";
-        playerData.party = selectedPartyRadio ? selectedPartyRadio.value : "Independent";
+        playerData.party = selected ? selected.value : "Independent";
         loadDashboard();
     }
 
     function confirmCustomParty() {
         const pName = document.getElementById('custom-party-name').value;
-        const pLogo = document.getElementById('custom-party-logo').value;
-        const pPres = document.getElementById('custom-party-president').value;
-        const pVp = document.getElementById('custom-party-vp').value;
-
-        if(!pName.trim()) {
-            alert('Please enter your party name!');
-            return;
-        }
-
+        if(!pName.trim()) { alert('Enter party name!'); return; }
         playerData.partyType = "custom";
-        playerData.party = `${pName} (${pLogo ? pLogo : 'No Symbol'})`;
-        playerData.president = pPres.trim() ? pPres : playerData.name;
-        playerData.vp = pVp.trim() ? pVp : "Not Assigned";
+        playerData.party = pName;
         loadDashboard();
     }
 
     function loadDashboard() {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
         document.getElementById('screen-dashboard').classList.add('active-screen');
-
         document.getElementById('disp-name').innerText = playerData.name;
         document.getElementById('disp-party').innerText = playerData.party;
         document.getElementById('disp-constituency').innerText = playerData.constituency;
         document.getElementById('disp-state').innerText = playerData.state;
         document.getElementById('disp-budget').innerText = playerData.budget;
-
         updateClockDisplay();
         startSimulationClock();
     }
@@ -537,26 +566,17 @@
         let days = Math.floor(totalMins / (24 * 60));
         let hours = Math.floor((totalMins % (24 * 60)) / 60);
         let mins = totalMins % 60;
-
-        let dElem = document.getElementById('game-days');
-        let hElem = document.getElementById('game-hours');
-        let mElem = document.getElementById('game-minutes');
-
-        if(dElem) dElem.innerText = days;
-        if(hElem) hElem.innerText = String(hours).padStart(2, '0');
-        if(mElem) mElem.innerText = String(mins).padStart(2, '0');
+        if(document.getElementById('game-days')) document.getElementById('game-days').innerText = days;
+        if(document.getElementById('game-hours')) document.getElementById('game-hours').innerText = String(hours).padStart(2, '0');
+        if(document.getElementById('game-minutes')) document.getElementById('game-minutes').innerText = String(mins).padStart(2, '0');
     }
 
     function startSimulationClock() {
         if(gameTimer) clearInterval(gameTimer);
-
         gameTimer = setInterval(() => {
             if(playerData.remainingMinutes > 0) {
                 playerData.remainingMinutes--;
                 updateClockDisplay();
-            } else {
-                clearInterval(gameTimer);
-                alert('Election time is over! Results will be declared.');
             }
         }, clockSpeed);
     }
@@ -565,19 +585,15 @@
         document.getElementById('btn-pause').classList.remove('active-speed');
         document.getElementById('btn-normal').classList.remove('active-speed');
         document.getElementById('btn-fast').classList.remove('active-speed');
-
         if(speedType === 'pause') {
             document.getElementById('btn-pause').classList.add('active-speed');
             if(gameTimer) clearInterval(gameTimer);
-            gameTimer = null;
         } else if(speedType === 'normal') {
             document.getElementById('btn-normal').classList.add('active-speed');
-            clockSpeed = 1000;
-            startSimulationClock();
+            clockSpeed = 1000; startSimulationClock();
         } else if(speedType === 'fast') {
             document.getElementById('btn-fast').classList.add('active-speed');
-            clockSpeed = 200;
-            startSimulationClock();
+            clockSpeed = 200; startSimulationClock();
         }
     }
 
@@ -595,156 +611,71 @@
 
     function toggleAllianceList() {
         const choice = document.getElementById('alliance-choice').value;
-        const allianceBox = document.getElementById('alliance-party-box');
-        if(choice === 'alliance') {
-            allianceBox.style.display = 'block';
-        } else {
-            allianceBox.style.display = 'none';
-        }
+        document.getElementById('alliance-party-box').style.display = (choice === 'alliance') ? 'block' : 'none';
     }
 
     function confirmAlliance() {
         const choice = document.getElementById('alliance-choice').value;
-        if(choice === 'solo') {
-            playerData.strategy = "Contesting Solo";
-            playerData.alliancePartner = "None";
-        } else {
-            const selectedPartner = document.querySelector('input[name="alliance-partner"]:checked');
-            playerData.strategy = "Alliance Formation";
-            playerData.alliancePartner = selectedPartner ? selectedPartner.value : "Coalition Partner";
-        }
-
+        playerData.strategy = (choice === 'solo') ? "Contesting Solo" : "Alliance Formation";
         document.getElementById('screen-alliance').classList.remove('active-screen');
         document.getElementById('screen-tickets').classList.add('active-screen');
         renderConstituencies("ALL");
     }
 
-    // Smooth optimized renderer to eliminate lag
     function renderConstituencies(stateFilter) {
         const container = document.getElementById('constituency-container');
         container.innerHTML = "";
-
-        let filtered = allConstituenciesData;
-        if(stateFilter !== "ALL") {
-            filtered = allConstituenciesData.filter(c => c.state === stateFilter);
-        }
-
-        document.getElementById('seat-count-display').innerText = `Showing Constituencies: ${filtered.length} (Total Available: ${allConstituenciesData.length})`;
-
-        let sliceData = filtered.slice(0, itemsPerPage);
-
-        sliceData.forEach((item) => {
+        let filtered = (stateFilter === "ALL") ? allConstituenciesData : allConstituenciesData.filter(c => c.state === stateFilter);
+        document.getElementById('seat-count-display').innerText = `Showing: ${filtered.length} Seats`;
+        filtered.slice(0, itemsPerPage).forEach((item) => {
             let cId = `const_${item.id}`;
-            let rowHTML = `
+            container.innerHTML += `
                 <div class="constituency-row">
                     <h4>#${item.id} - ${item.name} (${item.state})</h4>
                     <div class="candidates-group">
                         <label><input type="radio" name="${cId}" value="${item.candidates[0]}" checked> ${item.candidates[0]}</label>
                         <label><input type="radio" name="${cId}" value="${item.candidates[1]}"> ${item.candidates[1]}</label>
-                        <label><input type="radio" name="${cId}" value="${item.candidates[2]}"> ${item.candidates[2]}</label>
                     </div>
-                </div>
-            `;
-            container.innerHTML += rowHTML;
+                </div>`;
         });
-
-        if(filtered.length > itemsPerPage) {
-            container.innerHTML += `<p style="text-align:center; color:#ff9800; padding:10px;">Showing top ${itemsPerPage} items for smooth performance. Use State Filter for specific regions.</p>`;
-        }
     }
 
     function filterConstituencies() {
-        const selectedState = document.getElementById('ticket-state-filter').value;
-        renderConstituencies(selectedState);
+        renderConstituencies(document.getElementById('ticket-state-filter').value);
     }
 
     function confirmAllTickets() {
-        alert('All 543 constituency candidate tickets have been successfully confirmed! Entering full active election campaign phase.');
-        loadDashboard();
+        alert('Tickets confirmed! Entering Master Campaign Dashboard.');
+        openMasterDashboard();
     }
-
-    // Injecting timer bar into all screens dynamically
-    function injectTimerToAllScreens() {
-        const screens = ['screen-character', 'screen-party-hub', 'screen-existing-parties', 'screen-create-party', 'screen-alliance', 'screen-tickets'];
-        
-        screens.forEach(screenId => {
-            let scr = document.getElementById(screenId);
-            if(scr && !scr.querySelector('.global-timer-bar')) {
-                let timerBar = document.createElement('div');
-                timerBar.className = 'global-timer-bar';
-                timerBar.style.cssText = "background: #252525; padding: 8px; margin-bottom: 15px; border-radius: 6px; border: 1px solid #444; display: flex; justify-content: space-between; align-items: center; font-size: 13px;";
-                timerBar.innerHTML = `
-                    <span>⏳ <strong>Time:</strong> <span id="global-days-${screenId}">90</span>D <span id="global-hrs-${screenId}">00</span>H</span>
-                    <div>
-                        <button onclick="setTimeSpeed('pause')" style="padding: 3px 8px; font-size: 11px; margin:0; width:auto;">Pause</button>
-                        <button onclick="setTimeSpeed('normal')" style="padding: 3px 8px; font-size: 11px; margin:0; width:auto; background:#00897b; color:#fff;">1x</button>
-                        <button onclick="setTimeSpeed('fast')" style="padding: 3px 8px; font-size: 11px; margin:0; width:auto;">5x</button>
-                    </div>
-                `;
-                scr.insertBefore(timerBar, scr.firstChild);
-            }
-        });
-    }
-
-    // Syncing global timers across all active screens
-    setInterval(() => {
-        let totalMins = playerData.remainingMinutes;
-        let days = Math.floor(totalMins / (24 * 60));
-        let hours = Math.floor((totalMins % (24 * 60)) / 60);
-        
-        ['screen-character', 'screen-party-hub', 'screen-existing-parties', 'screen-create-party', 'screen-alliance', 'screen-tickets'].forEach(sId => {
-            let dElem = document.getElementById(`global-days-${sId}`);
-            let hElem = document.getElementById(`global-hrs-${sId}`);
-            if(dElem) dElem.innerText = days;
-            if(hElem) hElem.innerText = String(hours).padStart(2, '0');
-        });
-    }, 1000);
-
-    window.addEventListener('DOMContentLoaded', () => {
-        injectTimerToAllScreens();
-    });
-            // --- Master Campaign Dashboard Logic ---
-    let campaignStats = {
-        popularity: 35, // Percentage
-        winningChance: "Low",
-        mediaHype: 20
-    };
+        <script>
+    // --- Master Campaign Dashboard Functions ---
+    let campaignStats = { popularity: 35, mediaHype: 20 };
 
     function openMasterDashboard() {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
         document.getElementById('screen-master-dashboard').classList.add('active-screen');
-
         document.getElementById('master-disp-name').innerText = playerData.name;
         document.getElementById('master-disp-party').innerText = playerData.party;
         document.getElementById('master-disp-budget').innerText = playerData.budget;
         document.getElementById('master-disp-strategy').innerText = playerData.strategy;
-
         updateOpinionPoll();
     }
 
     function switchTab(tabName) {
-        document.getElementById('tab-rallies').style.display = 'none';
-        document.getElementById('tab-media').style.display = 'none';
-        document.getElementById('tab-press').style.display = 'none';
-        document.getElementById('tab-ground').style.display = 'none';
-
-        if(tabName === 'rallies') document.getElementById('tab-rallies').style.display = 'block';
-        if(tabName === 'media') document.getElementById('tab-media').style.display = 'block';
-        if(tabName === 'press') document.getElementById('tab-press').style.display = 'block';
-        if(tabName === 'ground') document.getElementById('tab-ground').style.display = 'block';
+        ['rallies', 'media', 'press', 'ground'].forEach(t => {
+            document.getElementById(`tab-${t}`).style.display = (t === tabName) ? 'block' : 'none';
+        });
     }
 
     function updateOpinionPoll() {
         let pollBox = document.getElementById('opinion-poll-text');
         if(campaignStats.popularity > 60) {
-            campaignStats.winningChance = "Very High (Leading)";
-            pollBox.innerHTML = `🟢 <strong>Strong Wave:</strong> Your party is currently leading with ${campaignStats.popularity}% projected vote share!`;
+            pollBox.innerHTML = `🟢 <strong>Leading:</strong> Popularity is strong at ${campaignStats.popularity}%!`;
         } else if(campaignStats.popularity > 40) {
-            campaignStats.winningChance = "Moderate (Competitive)";
-            pollBox.innerHTML = `🟡 <strong>Tight Race:</strong> Public sentiment is balanced. Popularity is at ${campaignStats.popularity}%. More rallies needed.`;
+            pollBox.innerHTML = `🟡 <strong>Competitive:</strong> Popularity at ${campaignStats.popularity}%. Push more rallies!`;
         } else {
-            campaignStats.winningChance = "Weak (Trailing)";
-            pollBox.innerHTML = `🔴 <strong>Trailing behind:</strong> Popularity is low (${campaignStats.popularity}%). Increase ad budget and organize mega rallies immediately!`;
+            pollBox.innerHTML = `🔴 <strong>Trailing:</strong> Popularity low (${campaignStats.popularity}%). Invest in ads & rallies!`;
         }
     }
 
@@ -755,164 +686,63 @@
 
     function conductMegaRally() {
         let cost = parseInt(document.getElementById('rally-budget-input').value) || 50;
-        let targetState = document.getElementById('rally-state').value;
-
-        if(playerData.budget < cost) {
-            alert('Insufficient budget for this mega rally!');
-            return;
-        }
-
+        if(playerData.budget < cost) { alert('Low budget!'); return; }
         playerData.budget -= cost;
         campaignStats.popularity = Math.min(95, campaignStats.popularity + Math.floor(cost / 5));
-        
         document.getElementById('master-disp-budget').innerText = playerData.budget;
-        logAction(`Mega rally organized in ${targetState} costing ₹${cost} Crores. Popularity increased!`);
+        logAction(`Mega rally organized (Cost: ₹${cost} Cr). Popularity up!`);
         updateOpinionPoll();
     }
 
     function investInMedia() {
         let cost = parseInt(document.getElementById('media-budget-input').value) || 30;
-
-        if(playerData.budget < cost) {
-            alert('Insufficient budget for media campaign!');
-            return;
-        }
-
+        if(playerData.budget < cost) { alert('Low budget!'); return; }
         playerData.budget -= cost;
-        campaignStats.mediaHype += 15;
         campaignStats.popularity = Math.min(95, campaignStats.popularity + Math.floor(cost / 8));
-
         document.getElementById('master-disp-budget').innerText = playerData.budget;
-        logAction(`Media & Print campaign launched (Spent ₹${cost} Cr). Visibility boosted across channels.`);
+        logAction(`Media campaign launched (Cost: ₹${cost} Cr).`);
         updateOpinionPoll();
     }
 
     function holdPressConference() {
-        let stance = document.getElementById('press-stance').value;
-        let gain = 0;
-
-        if(stance === 'aggressive') {
-            gain = Math.floor(Math.random() * 10) + 5;
-            logAction(`Aggressive press meet held! Media headlines gained, popularity up by ${gain}%.`);
-        } else if(stance === 'development') {
-            gain = Math.floor(Math.random() * 6) + 3;
-            logAction(`Development-focused press meet held. Steady public trust gained (+${gain}%).`);
-        } else {
-            gain = Math.floor(Math.random() * 8) + 4;
-            logAction(`Regional/Emotional appeal broadcasted successfully (+${gain}%).`);
-        }
-
+        let gain = Math.floor(Math.random() * 8) + 4;
         campaignStats.popularity = Math.min(95, campaignStats.popularity + gain);
+        logAction(`Press conference held successfully (+${gain}% popularity).`);
         updateOpinionPoll();
     }
 
     function conductGroundCampaign() {
-        if(playerData.budget < 10) {
-            alert('At least ₹10 Crores required for ground deployment!');
-            return;
-        }
-
+        if(playerData.budget < 10) { alert('Requires ₹10 Crores!'); return; }
         playerData.budget -= 10;
         campaignStats.popularity = Math.min(95, campaignStats.popularity + 4);
-
         document.getElementById('master-disp-budget').innerText = playerData.budget;
-        logAction(`Ground workers deployed successfully. Grassroots connect strengthened.`);
+        logAction(`Ground workers deployed.`);
         updateOpinionPoll();
     }
 
     function resumeSimulationClockFromDashboard() {
-        alert('Returning to simulation timeline. Watch your clock and strategy outcomes!');
-openMasterDashboard(); // वापस टाइमर वाले डैशबोर्ड पर ले जाएगा
+        alert('Resuming simulation...');
+        loadDashboard();
     }
-    
+
+    // Timer Injector across screens
+    window.addEventListener('DOMContentLoaded', () => {
+        ['screen-character', 'screen-party-hub', 'screen-existing-parties', 'screen-create-party', 'screen-alliance', 'screen-tickets'].forEach(sId => {
+            let scr = document.getElementById(sId);
+            if(scr && !scr.querySelector('.global-timer-bar')) {
+                let tb = document.createElement('div');
+                tb.style.cssText = "background:#252525; padding:6px; margin-bottom:10px; border-radius:4px; font-size:12px;";
+                tb.innerHTML = `⏳ <strong>Simulation Active</strong>`;
+                scr.insertBefore(tb, scr.firstChild);
+            }
+        });
+    });
 </script>
 
-        <!-- SCREEN 7: Master Campaign Dashboard -->
-    <div id="screen-master-dashboard" class="screen">
-        <h2>Master Election Campaign Dashboard</h2>
-        
-        <div class="dashboard-card" style="border-left-color: #00897b;">
-            <p><strong>Leader:</strong> <span id="master-disp-name"></span> | <strong>Party:</strong> <span id="master-disp-party"></span></p>
-            <p><strong>Remaining Budget:</strong> ₹<span id="master-disp-budget">1000</span> Crores | <strong>Current Strategy:</strong> <span id="master-disp-strategy">Solo</span></p>
-        </div>
-
-        <!-- Intelligence Report / Secret Opinion Poll Box -->
-        <div class="dashboard-card" style="background: #1a237e; border-left-color: #3f51b5;">
-            <h4 style="margin: 0 0 5px 0; color: #ffeb3b;">📊 Secret Intelligence Report & Opinion Poll</h4>
-            <p id="opinion-poll-text" style="font-size: 13px; margin: 0; color: #e8eaf6;">Analyzing ground reality... Invest in campaigns and media to see updated projections.</p>
-        </div>
-
-        <!-- Master Dashboard Navigation Tabs -->
-        <div style="display: flex; gap: 5px; margin-bottom: 15px; flex-wrap: wrap;">
-            <button onclick="switchTab('rallies')" style="flex: 1; margin:0; padding:8px; font-size:13px; background:#37474f;">Rallies</button>
-            <button onclick="switchTab('media')" style="flex: 1; margin:0; padding:8px; font-size:13px; background:#37474f;">Media & Ads</button>
-            <button onclick="switchTab('press')" style="flex: 1; margin:0; padding:8px; font-size:13px; background:#37474f;">Press Meet</button>
-            <button onclick="switchTab('ground')" style="flex: 1; margin:0; padding:8px; font-size:13px; background:#37474f;">Door-to-Door</button>
-        </div>
-
-        <!-- TAB 1: Rallies Management -->
-        <div id="tab-rallies" class="campaign-tab-content" style="background: #252525; padding: 12px; border-radius: 6px; margin-bottom: 15px;">
-            <h4 style="color: #ff9800; margin-top:0;">Megarally & Public Gatherings</h4>
-            <div class="form-group">
-                <label>Target Region / State:</label>
-                <select id="rally-state">
-                    <option value="Uttarakhand">Uttarakhand</option>
-                    <option value="Uttar Pradesh">Uttar Pradesh</option>
-                    <option value="Maharashtra">Maharashtra</option>
-                    <option value="Bihar">Bihar</option>
-                    <option value="Delhi">Delhi</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Allocate Rally Budget (₹ Crores):</label>
-                <input type="number" id="rally-budget-input" value="50" min="10" max="500">
-            </div>
-            <button onclick="conductMegaRally()" style="background: #ff9800; color: #121212;">Organize Mega Rally & Boost Popularity</button>
-        </div>
-
-        <!-- TAB 2: Media & Print Ads -->
-        <div id="tab-media" class="campaign-tab-content" style="display: none; background: #252525; padding: 12px; border-radius: 6px; margin-bottom: 15px;">
-            <h4 style="color: #ff9800; margin-top:0;">Print Media & Social Ads Management</h4>
-            <p style="font-size: 13px; color: #b0bec5;">Invest in newspapers and television advertisements to increase your brand visibility.</p>
-            <div class="form-group">
-                <label>Ad Campaign Budget (₹ Crores):</label>
-                <input type="number" id="media-budget-input" value="30" min="5" max="300">
-            </div>
-            <button onclick="investInMedia()" style="background: #0288d1; color: white;">Launch Media Campaign</button>
-        </div>
-
-        <!-- TAB 3: Press Conference -->
-        <div id="tab-press" class="campaign-tab-content" style="display: none; background: #252525; padding: 12px; border-radius: 6px; margin-bottom: 15px;">
-            <h4 style="color: #ff9800; margin-top:0;">Live Press Conference</h4>
-            <p style="font-size: 13px; color: #b0bec5;">Address the media on national issues to shape public narrative.</p>
-            <div class="form-group">
-                <label>Select Stand / Stance:</label>
-                <select id="press-stance">
-                    <option value="aggressive">Aggressive Attack on Opponents (High Risk / High Gain)</option>
-                    <option value="development">Focus on Development & Jobs (Balanced & Safe)</option>
-                    <option value="emotional">Emotional / Regional Appeal (Strong Local Connect)</option>
-                </select>
-            </div>
-            <button onclick="holdPressConference()" style="background: #e91e63; color: white;">Hold Press Conference</button>
-        </div>
-
-        <!-- TAB 4: Door-to-Door Ground Campaign -->
-        <div id="tab-ground" class="campaign-tab-content" style="display: none; background: #252525; padding: 12px; border-radius: 6px; margin-bottom: 15px;">
-            <h4 style="color: #ff9800; margin-top:0;">Ground & Door-to-Door Campaign</h4>
-            <p style="font-size: 13px; color: #b0bec5;">Deploy ground workers to secure grassroots connection in your constituency.</p>
-            <button onclick="conductGroundCampaign()" style="background: #4caf50; color: white;">Deploy Ground Workers (Cost: ₹10 Cr)</button>
-        </div>
-
-        <!-- Simulation Progress & Log Box -->
-        <div class="dashboard-card" style="background: #1e1e1e; max-height: 120px; overflow-y: auto;">
-            <h4 style="margin: 0 0 5px 0; color: #b0bec5; font-size: 13px;">Campaign Activity Log:</h4>
-            <div id="campaign-log" style="font-size: 12px; color: #81c784;">Dashboard initialized. Plan your moves carefully!</div>
-        </div>
-
-        <button onclick="resumeSimulationClockFromDashboard()" style="background: #607d8b; color: white;">Resume Time & Monitor Results</button>
-                </div>
-                
 </body>
-    </html>
+</html>
 
+    
                                                      
+    
+        
