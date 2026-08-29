@@ -18,7 +18,7 @@
         }
         .game-container {
             width: 100%;
-            max-width: 600px;
+            max-width: 650px;
             background: #1e1e1e;
             padding: 25px;
             border-radius: 12px;
@@ -70,11 +70,20 @@
         button:hover {
             background: #f57c00;
         }
+        .party-list-container {
+            max-height: 250px;
+            overflow-y: auto;
+            border: 1px solid #444;
+            padding: 10px;
+            border-radius: 6px;
+            background: #252525;
+            margin-bottom: 15px;
+        }
         .party-option {
             background: #2a2a2a;
-            padding: 10px;
-            margin-bottom: 8px;
-            border-radius: 6px;
+            padding: 8px 10px;
+            margin-bottom: 6px;
+            border-radius: 4px;
             cursor: pointer;
             border: 1px solid #444;
         }
@@ -90,13 +99,14 @@
         }
         .timer-box {
             text-align: center;
-            font-size: 28px;
+            font-size: 24px;
             font-weight: bold;
             color: #e91e63;
-            margin: 20px 0;
+            margin: 15px 0;
             background: #2d2d2d;
             padding: 15px;
             border-radius: 8px;
+            border: 1px solid #444;
         }
         .time-controls {
             display: flex;
@@ -157,12 +167,23 @@
         <button onclick="goToCreateParty()" style="background: #0288d1; color: white;">Create Political Party</button>
     </div>
 
-    <!-- SCREEN 3A: Existing Parties -->
+    <!-- SCREEN 3A: Existing Parties (12 Real Political Parties of India) -->
     <div id="screen-existing-parties" class="screen">
-        <h2>Existing Parties</h2>
-        <div class="party-option"><label><input type="radio" name="party" value="National Party" checked> National Party</label></div>
-        <div class="party-option"><label><input type="radio" name="party" value="Peoples Front"> Peoples Front</label></div>
-        <div class="party-option"><label><input type="radio" name="party" value="Democratic Alliance"> Democratic Alliance</label></div>
+        <h2>Select Existing Political Party</h2>
+        <div class="party-list-container">
+            <div class="party-option"><label><input type="radio" name="party" value="Bharatiya Janata Party (BJP)" checked> Bharatiya Janata Party (BJP)</label></div>
+            <div class="party-option"><label><input type="radio" name="party" value="Indian National Congress (INC)"> Indian National Congress (INC)</label></div>
+            <div class="party-option"><label><input type="radio" name="party" value="Aam Aadmi Party (AAP)"> Aam Aadmi Party (AAP)</label></div>
+            <div class="party-option"><label><input type="radio" name="party" value="Samajwadi Party (SP)"> Samajwadi Party (SP)</label></div>
+            <div class="party-option"><label><input type="radio" name="party" value="Bahujan Samaj Party (BSP)"> Bahujan Samaj Party (BSP)</label></div>
+            <div class="party-option"><label><input type="radio" name="party" value="All India Trinamool Congress (TMC)"> All India Trinamool Congress (TMC)</label></div>
+            <div class="party-option"><label><input type="radio" name="party" value="Janata Dal (United) (JDU)"> Janata Dal (United) (JDU)</label></div>
+            <div class="party-option"><label><input type="radio" name="party" value="Dravida Munnetra Kazhagam (DMK)"> Dravida Munnetra Kazhagam (DMK)</label></div>
+            <div class="party-option"><label><input type="radio" name="party" value="Shiv Sena (SS)"> Shiv Sena (SS)</label></div>
+            <div class="party-option"><label><input type="radio" name="party" value="Nationalist Congress Party (NCP)"> Nationalist Congress Party (NCP)</label></div>
+            <div class="party-option"><label><input type="radio" name="party" value="Communist Party of India (Marxist) (CPIM)"> Communist Party of India (Marxist) (CPIM)</label></div>
+            <div class="party-option"><label><input type="radio" name="party" value="National People's Party (NPP)"> National People's Party (NPP)</label></div>
+        </div>
         <button onclick="confirmExistingParty()">Join Party & Proceed</button>
     </div>
 
@@ -188,7 +209,7 @@
         <button onclick="confirmCustomParty()">Register Party & Proceed</button>
     </div>
 
-    <!-- SCREEN 4: Dashboard & Real-Time Countdown -->
+    <!-- SCREEN 4: Dashboard & Real-Time Simulation Clock -->
     <div id="screen-dashboard" class="screen">
         <h2>Election Dashboard</h2>
         
@@ -200,14 +221,16 @@
             <p><strong>Total Budget:</strong> ₹<span id="disp-budget">1000</span> Crores</p>
         </div>
 
+        <!-- Advanced Game Simulation Clock (Days, Hours, Minutes) -->
         <div class="timer-box">
-            Election Countdown: <span id="countdown-days">90</span> Days Left
+            Election Countdown:<br>
+            <span id="game-days">90</span> Days | <span id="game-hours">00</span> Hours | <span id="game-minutes">00</span> Mins
         </div>
 
         <div class="time-controls">
             <button id="btn-pause" onclick="setTimeSpeed('pause')">Pause</button>
             <button id="btn-normal" class="active-speed" onclick="setTimeSpeed('normal')">Forward (1x)</button>
-            <button id="btn-fast" onclick="setTimeSpeed('fast')">Fast Forward (3x)</button>
+            <button id="btn-fast" onclick="setTimeSpeed('fast')">Fast Forward (5x)</button>
         </div>
 
         <button onclick="startCampaign()" style="background: #e91e63; color: white;">Start Campaign Now</button>
@@ -233,11 +256,11 @@
         president: "",
         vp: "",
         budget: 1000,
-        daysLeft: 90
+        totalMinutes: 90 * 24 // 90 days total in minutes representation for clock engine
     };
 
     let gameTimer = null;
-    let timeSpeedMultiplier = 1000;
+    let clockSpeed = 1000; // 1 second real-time = 1 game minute
 
     function saveCharacter() {
         const name = document.getElementById('char-name').value;
@@ -303,23 +326,33 @@
         document.getElementById('disp-constituency').innerText = playerData.constituency;
         document.getElementById('disp-state').innerText = playerData.state;
         document.getElementById('disp-budget').innerText = playerData.budget;
-        document.getElementById('countdown-days').innerText = playerData.daysLeft;
 
-        startCountdownTimer();
+        updateClockDisplay();
+        startSimulationClock();
     }
 
-    function startCountdownTimer() {
+    function updateClockDisplay() {
+        let days = Math.floor(playerData.totalMinutes / (24 * 60));
+        let hours = Math.floor((playerData.totalMinutes % (24 * 60)) / 60);
+        let mins = playerData.totalMinutes % 60;
+
+        document.getElementById('game-days').innerText = days;
+        document.getElementById('game-hours').innerText = String(hours).padStart(2, '0');
+        document.getElementById('game-minutes').innerText = String(mins).padStart(2, '0');
+    }
+
+    function startSimulationClock() {
         if(gameTimer) clearInterval(gameTimer);
 
         gameTimer = setInterval(() => {
-            if(playerData.daysLeft > 0) {
-                playerData.daysLeft--;
-                document.getElementById('countdown-days').innerText = playerData.daysLeft;
+            if(playerData.totalMinutes > 0) {
+                playerData.totalMinutes--;
+                updateClockDisplay();
             } else {
                 clearInterval(gameTimer);
                 alert('Election time is over! Results will be declared.');
             }
-        }, timeSpeedMultiplier);
+        }, clockSpeed);
     }
 
     function setTimeSpeed(speedType) {
@@ -333,12 +366,12 @@
             gameTimer = null;
         } else if(speedType === 'normal') {
             document.getElementById('btn-normal').classList.add('active-speed');
-            timeSpeedMultiplier = 1000;
-            startCountdownTimer();
+            clockSpeed = 1000; // 1 second = 1 game minute
+            startSimulationClock();
         } else if(speedType === 'fast') {
             document.getElementById('btn-fast').classList.add('active-speed');
-            timeSpeedMultiplier = 400;
-            startCountdownTimer();
+            clockSpeed = 200; // 5x speed (0.2 seconds = 1 game minute)
+            startSimulationClock();
         }
     }
 
@@ -352,11 +385,11 @@
         document.getElementById('screen-campaign').classList.remove('active-screen');
         document.getElementById('screen-dashboard').classList.add('active-screen');
         if(!gameTimer && document.getElementById('btn-pause').classList.contains('active-speed') === false) {
-            startCountdownTimer();
+            startSimulationClock();
         }
     }
 </script>
 
 </body>
     </html>
-    
+            
