@@ -400,4 +400,36 @@
 
 </body>
     </html>
+
+// 1 सेकंड = 1 मिनट वाला टाइम सिमुलेशन इंजन
+    let timeInterval = null;
+
+    function startTimeSystem() {
+        if (timeInterval) clearInterval(timeInterval);
+        timeInterval = setInterval(() => {
+            gameData.totalMinutes++;
+            updateClockUI();
+            
+            // हर 30 सेकंड में ऑटोसेव
+            if (gameData.totalMinutes % 30 === 0) {
+                autoSaveGame();
+            }
+        }, 1000);
+    }
+
+    function updateClockUI() {
+        let day = Math.floor(gameData.totalMinutes / (24 * 60)) + 1;
+        let remMins = gameData.totalMinutes % (24 * 60);
+        let hour = Math.floor(remMins / 60);
+        let minute = remMins % 60;
+        
+        let ampm = hour >= 12 ? "PM" : "AM";
+        let formattedHour = hour % 12 === 0 ? 12 : hour % 12;
+        let formattedMinute = String(minute).padStart(2, '0');
+
+        let clockElem = document.getElementById('game-clock-display');
+        if (clockElem) {
+            clockElem.innerHTML = `🗓️ Day ${day} | ⏱️ ${formattedHour}:${formattedMinute} ${ampm}`;
+        }
+    }
     
