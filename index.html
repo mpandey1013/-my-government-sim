@@ -393,4 +393,465 @@
 
 </body>
             </html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Political Simulation Game</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #121212;
+            color: #e0e0e0;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .game-container {
+            width: 100%;
+            max-width: 650px;
+            background: #1e1e1e;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+        }
+        .screen {
+            display: none;
+        }
+        .active-screen {
+            display: block;
+        }
+        h2 {
+            color: #ff9800;
+            text-align: center;
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #b0bec5;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            background: #2d2d2d;
+            border: 1px solid #444;
+            color: #fff;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #ff9800;
+            color: #121212;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #f57c00;
+        }
+        .party-list-container {
+            max-height: 220px;
+            overflow-y: auto;
+            border: 1px solid #444;
+            padding: 10px;
+            border-radius: 6px;
+            background: #252525;
+            margin-bottom: 15px;
+        }
+        .party-option {
+            background: #2a2a2a;
+            padding: 8px 10px;
+            margin-bottom: 6px;
+            border-radius: 4px;
+            cursor: pointer;
+            border: 1px solid #444;
+        }
+        .party-option:hover {
+            border-color: #ff9800;
+        }
+        .dashboard-card {
+            background: #252525;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid #ff9800;
+        }
+        .timer-box {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: #e91e63;
+            margin: 15px 0;
+            background: #2d2d2d;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #444;
+        }
+        .time-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .time-controls button {
+            margin-top: 0;
+            background: #37474f;
+            color: #fff;
+        }
+        .time-controls button.active-speed {
+            background: #00897b;
+        }
+        .mcc-banner {
+            background: #b71c1c;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+            border-radius: 6px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="game-container">
+
+    <!-- SCREEN 1: Character Creation -->
+    <div id="screen-character" class="screen active-screen">
+        <h2>Political Career Initialization</h2>
+        <div class="form-group">
+            <label>Leader Name:</label>
+            <input type="text" id="char-name" placeholder="Enter your name">
+        </div>
+        <div class="form-group">
+            <label>Select State:</label>
+            <select id="char-state">
+                <option value="Uttarakhand">Uttarakhand</option>
+                <option value="Uttar Pradesh">Uttar Pradesh</option>
+                <option value="Delhi">Delhi</option>
+                <option value="Bihar">Bihar</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Constituency / Seat:</label>
+            <input type="text" id="char-constituency" placeholder="Constituency name">
+        </div>
+        <div class="form-group">
+            <label>Political Ideology:</label>
+            <select id="char-ideology">
+                <option value="Nationalism">Nationalism</option>
+                <option value="Socialism">Socialism</option>
+                <option value="Capitalism">Capitalism</option>
+                <option value="Secularism">Secularism</option>
+            </select>
+        </div>
+        <button onclick="saveCharacter()">Next Step</button>
+    </div>
+
+    <!-- SCREEN 2: Party Hub -->
+    <div id="screen-party-hub" class="screen">
+        <h2>Party Selection</h2>
+        <p>How would you like to enter politics?</p>
+        <button onclick="goToExistingParties()">Join Existing Party</button>
+        <button onclick="goToCreateParty()" style="background: #0288d1; color: white;">Create Political Party</button>
+    </div>
+
+    <!-- SCREEN 3A: Existing Parties (12 Real Political Parties of India) -->
+    <div id="screen-existing-parties" class="screen">
+        <h2>Select Existing Political Party</h2>
+        <div class="party-list-container">
+            <div class="party-option"><label><input type="radio" name="party" value="Bharatiya Janata Party (BJP)" checked> Bharatiya Janata Party (BJP)</label></div>
+            <div class="party-option"><label><input type="radio" name="party" value="Indian National Congress (INC)"> Indian National Congress (INC)</label></div>
+            <div class="party-option"><label><input type="radio" name="party" value="Aam Aadmi Party (AAP)"> Aam Aadmi Party (AAP)</label></div>
+            <div class="party-option"><label><input type="radio" name="party" value="Samajwadi Party (SP)"> Samajwadi Party (SP)</label></div>
+            <div class="party-option"><label><input type="radio" name="party" value="Bahujan Samaj Party (BSP)"> Bahujan Samaj Party (BSP)</label></div>
+            <div class="party-option"><label><input type="radio" name="party" value="All India Trinamool Congress (TMC)"> All India Trinamool Congress (TMC)</label></div>
+            <div class="party-option"><label><input type="radio" name="party" value="Janata Dal (United) (JDU)"> Janata Dal (United) (JDU)</label></div>
+            <div class="party-option"><label><input type="radio" name="party" value="Dravida Munnetra Kazhagam (DMK)"> Dravida Munnetra Kazhagam (DMK)</label></div>
+            <div class="party-option"><label><input type="radio" name="party" value="Shiv Sena (SS)"> Shiv Sena (SS)</label></div>
+            <div class="party-option"><label><input type="radio" name="party" value="Nationalist Congress Party (NCP)"> Nationalist Congress Party (NCP)</label></div>
+            <div class="party-option"><label><input type="radio" name="party" value="Communist Party of India (Marxist) (CPIM)"> Communist Party of India (Marxist) (CPIM)</label></div>
+            <div class="party-option"><label><input type="radio" name="party" value="National People's Party (NPP)"> National People's Party (NPP)</label></div>
+        </div>
+        <button onclick="confirmExistingParty()">Join Party & Proceed</button>
+    </div>
+
+    <!-- SCREEN 3B: Create Party -->
+    <div id="screen-create-party" class="screen">
+        <h2>Create New Party</h2>
+        <div class="form-group">
+            <label>Party Name:</label>
+            <input type="text" id="custom-party-name" placeholder="e.g. Janhit Party">
+        </div>
+        <div class="form-group">
+            <label>Party Symbol / Logo:</label>
+            <input type="text" id="custom-party-logo" placeholder="e.g. Rising Sun">
+        </div>
+        <div class="form-group">
+            <label>Party President:</label>
+            <input type="text" id="custom-party-president" placeholder="President name">
+        </div>
+        <div class="form-group">
+            <label>Vice President:</label>
+            <input type="text" id="custom-party-vp" placeholder="Vice President name">
+        </div>
+        <button onclick="confirmCustomParty()">Register Party & Proceed</button>
+    </div>
+
+    <!-- SCREEN 4: Dashboard & Real-Time Simulation Clock -->
+    <div id="screen-dashboard" class="screen">
+        <h2>Election Dashboard</h2>
+        
+        <div class="dashboard-card">
+            <p><strong>Leader:</strong> <span id="disp-name"></span></p>
+            <p><strong>Party:</strong> <span id="disp-party"></span></p>
+            <p><strong>Constituency:</strong> <span id="disp-constituency"></span> (<span id="disp-state"></span>)</p>
+            <p><strong>Candidate Status:</strong> Prime Minister Candidate Cleared</p>
+            <p><strong>Total Budget:</strong> ₹<span id="disp-budget">1000</span> Crores</p>
+        </div>
+
+        <div class="timer-box">
+            Election Countdown:<br>
+            <span id="game-days">90</span> Days | <span id="game-hours">00</span> Hours | <span id="game-minutes">00</span> Mins
+        </div>
+
+        <div class="time-controls">
+            <button id="btn-pause" onclick="setTimeSpeed('pause')">Pause</button>
+            <button id="btn-normal" class="active-speed" onclick="setTimeSpeed('normal')">Forward (1x)</button>
+            <button id="btn-fast" onclick="setTimeSpeed('fast')">Fast Forward (5x)</button>
+        </div>
+
+        <button onclick="startCampaign()" style="background: #e91e63; color: white;">Start Campaign Now</button>
+    </div>
+
+    <!-- SCREEN 5: Alliance & Model Code of Conduct Hub -->
+    <div id="screen-alliance" class="screen">
+        <h2>Election Commission: Model Code of Conduct</h2>
+        <div class="mcc-banner">
+            ⚠️ MODEL CODE OF CONDUCT (MCC) IS ACTIVE!
+        </div>
+        <p>Elections have been announced. You must decide how your political campaign will contest the elections across the country.</p>
+        
+        <div class="form-group">
+            <label>Choose Campaign Strategy:</label>
+            <select id="alliance-choice" onchange="toggleAllianceList()">
+                <option value="solo">Contest Solo (Alone)</option>
+                <option value="alliance">Form Alliance with Existing Party</option>
+            </select>
+        </div>
+
+        <div id="alliance-party-box" style="display: none;">
+            <label>Select Partner Party for Alliance:</label>
+            <div class="party-list-container">
+                <div class="party-option"><label><input type="radio" name="alliance-partner" value="Bharatiya Janata Party (BJP)" checked> Bharatiya Janata Party (BJP)</label></div>
+                <div class="party-option"><label><input type="radio" name="alliance-partner" value="Indian National Congress (INC)"> Indian National Congress (INC)</label></div>
+                <div class="party-option"><label><input type="radio" name="alliance-partner" value="Aam Aadmi Party (AAP)"> Aam Aadmi Party (AAP)</label></div>
+                <div class="party-option"><label><input type="radio" name="alliance-partner" value="Samajwadi Party (SP)"> Samajwadi Party (SP)</label></div>
+                <div class="party-option"><label><input type="radio" name="alliance-partner" value="Bahujan Samaj Party (BSP)"> Bahujan Samaj Party (BSP)</label></div>
+                <div class="party-option"><label><input type="radio" name="alliance-partner" value="All India Trinamool Congress (TMC)"> All India Trinamool Congress (TMC)</label></div>
+                <div class="party-option"><label><input type="radio" name="alliance-partner" value="Janata Dal (United) (JDU)"> Janata Dal (United) (JDU)</label></div>
+                <div class="party-option"><label><input type="radio" name="alliance-partner" value="Dravida Munnetra Kazhagam (DMK)"> Dravida Munnetra Kazhagam (DMK)</label></div>
+                <div class="party-option"><label><input type="radio" name="alliance-partner" value="Shiv Sena (SS)"> Shiv Sena (SS)</label></div>
+                <div class="party-option"><label><input type="radio" name="alliance-partner" value="Nationalist Congress Party (NCP)"> Nationalist Congress Party (NCP)</label></div>
+                <div class="party-option"><label><input type="radio" name="alliance-partner" value="Communist Party of India (Marxist) (CPIM)"> Communist Party of India (Marxist) (CPIM)</label></div>
+                <div class="party-option"><label><input type="radio" name="alliance-partner" value="National People's Party (NPP)"> National People's Party (NPP)</label></div>
+            </div>
+        </div>
+
+        <button onclick="confirmAlliance()" style="background: #4caf50; color: white;">Confirm Strategy & Proceed</button>
+        <button onclick="goBackToDashboard()" style="background: #607d8b; color: white;">Back to Dashboard</button>
+    </div>
+
+</div>
+
+<script>
+    let playerData = {
+        name: "",
+        state: "",
+        constituency: "",
+        ideology: "",
+        partyType: "",
+        party: "",
+        president: "",
+        vp: "",
+        budget: 1000,
+        remainingMinutes: 90 * 24 * 60,
+        strategy: "Solo",
+        alliancePartner: "None"
+    };
+
+    let gameTimer = null;
+    let clockSpeed = 1000;
+
+    function saveCharacter() {
+        const name = document.getElementById('char-name').value;
+        if(!name.trim()) {
+            alert('Please enter your name!');
+            return;
+        }
+        playerData.name = name;
+        playerData.state = document.getElementById('char-state').value;
+        playerData.constituency = document.getElementById('char-constituency').value || "General Constituency";
+        playerData.ideology = document.getElementById('char-ideology').value;
+
+        document.getElementById('screen-character').classList.remove('active-screen');
+        document.getElementById('screen-party-hub').classList.add('active-screen');
+    }
+
+    function goToExistingParties() {
+        document.getElementById('screen-party-hub').classList.remove('active-screen');
+        document.getElementById('screen-existing-parties').classList.add('active-screen');
+    }
+
+    function goToCreateParty() {
+        document.getElementById('screen-party-hub').classList.remove('active-screen');
+        document.getElementById('screen-create-party').classList.add('active-screen');
+    }
+
+    function confirmExistingParty() {
+        const selectedPartyRadio = document.querySelector('input[name="party"]:checked');
+        playerData.partyType = "existing";
+        playerData.party = selectedPartyRadio ? selectedPartyRadio.value : "Independent";
+        loadDashboard();
+    }
+
+    function confirmCustomParty() {
+        const pName = document.getElementById('custom-party-name').value;
+        const pLogo = document.getElementById('custom-party-logo').value;
+        const pPres = document.getElementById('custom-party-president').value;
+        const pVp = document.getElementById('custom-party-vp').value;
+
+        if(!pName.trim()) {
+            alert('Please enter your party name!');
+            return;
+        }
+
+        playerData.partyType = "custom";
+        playerData.party = `${pName} (${pLogo ? pLogo : 'No Symbol'})`;
+        playerData.president = pPres.trim() ? pPres : playerData.name;
+        playerData.vp = pVp.trim() ? pVp : "Not Assigned";
+        loadDashboard();
+    }
+
+    function loadDashboard() {
+        document.getElementById('screen-character').classList.remove('active-screen');
+        document.getElementById('screen-party-hub').classList.remove('active-screen');
+        document.getElementById('screen-existing-parties').classList.remove('active-screen');
+        document.getElementById('screen-create-party').classList.remove('active-screen');
+        document.getElementById('screen-alliance').classList.remove('active-screen');
+        
+        document.getElementById('screen-dashboard').classList.add('active-screen');
+
+        document.getElementById('disp-name').innerText = playerData.name;
+        document.getElementById('disp-party').innerText = playerData.party;
+        document.getElementById('disp-constituency').innerText = playerData.constituency;
+        document.getElementById('disp-state').innerText = playerData.state;
+        document.getElementById('disp-budget').innerText = playerData.budget;
+
+        updateClockDisplay();
+        startSimulationClock();
+    }
+
+    function updateClockDisplay() {
+        let totalMins = playerData.remainingMinutes;
+        let days = Math.floor(totalMins / (24 * 60));
+        let hours = Math.floor((totalMins % (24 * 60)) / 60);
+        let mins = totalMins % 60;
+
+        document.getElementById('game-days').innerText = days;
+        document.getElementById('game-hours').innerText = String(hours).padStart(2, '0');
+        document.getElementById('game-minutes').innerText = String(mins).padStart(2, '0');
+    }
+
+    function startSimulationClock() {
+        if(gameTimer) clearInterval(gameTimer);
+
+        gameTimer = setInterval(() => {
+            if(playerData.remainingMinutes > 0) {
+                playerData.remainingMinutes--;
+                updateClockDisplay();
+            } else {
+                clearInterval(gameTimer);
+                alert('Election time is over! Results will be declared.');
+            }
+        }, clockSpeed);
+    }
+
+    function setTimeSpeed(speedType) {
+        document.getElementById('btn-pause').classList.remove('active-speed');
+        document.getElementById('btn-normal').classList.remove('active-speed');
+        document.getElementById('btn-fast').classList.remove('active-speed');
+
+        if(speedType === 'pause') {
+            document.getElementById('btn-pause').classList.add('active-speed');
+            if(gameTimer) clearInterval(gameTimer);
+            gameTimer = null;
+        } else if(speedType === 'normal') {
+            document.getElementById('btn-normal').classList.add('active-speed');
+            clockSpeed = 1000;
+            startSimulationClock();
+        } else if(speedType === 'fast') {
+            document.getElementById('btn-fast').classList.add('active-speed');
+            clockSpeed = 200;
+            startSimulationClock();
+        }
+    }
+
+    function startCampaign() {
+        if(gameTimer) clearInterval(gameTimer);
+        document.getElementById('screen-dashboard').classList.remove('active-screen');
+        document.getElementById('screen-alliance').classList.add('active-screen');
+    }
+
+    function goBackToDashboard() {
+        document.getElementById('screen-alliance').classList.remove('active-screen');
+        document.getElementById('screen-dashboard').classList.add('active-screen');
+        if(!gameTimer && document.getElementById('btn-pause').classList.contains('active-speed') === false) {
+            startSimulationClock();
+        }
+    }
+
+    function toggleAllianceList() {
+        const choice = document.getElementById('alliance-choice').value;
+        const allianceBox = document.getElementById('alliance-party-box');
+        if(choice === 'alliance') {
+            allianceBox.style.display = 'block';
+        } else {
+            allianceBox.style.display = 'none';
+        }
+    }
+
+    function confirmAlliance() {
+        const choice = document.getElementById('alliance-choice').value;
+        if(choice === 'solo') {
+            playerData.strategy = "Contesting Solo";
+            playerData.alliancePartner = "None";
+            alert('Strategy confirmed: Contesting Solo across constituencies!');
+        } else {
+            const selectedPartner = document.querySelector('input[name="alliance-partner"]:checked');
+            playerData.strategy = "Alliance Formation";
+            playerData.alliancePartner = selectedPartner ? selectedPartner.value : "Coalition Partner";
+            alert(`Alliance confirmed with ${playerData.alliancePartner}!`);
+        }
+    }
+</script>
+
+</body>
+</html>
                 
