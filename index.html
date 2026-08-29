@@ -3,508 +3,401 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Political Simulation Game</title>
+    <title>Prime Minister Simulator - Pro Edition with Autosave</title>
     <style>
+        :root {
+            --bg-color: #0c0f12;
+            --panel-bg: #161b22;
+            --accent-gold: #f39c12;
+            --text-main: #e6edf3;
+            --text-muted: #8b949e;
+            --border-color: #30363d;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #121212;
-            color: #e0e0e0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, #050709, #121821);
+            color: var(--text-main);
             margin: 0;
-            padding: 20px;
+            padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
+            height: 100vh;
+            overflow: hidden;
         }
-        .game-container {
+
+        .phone-frame {
             width: 100%;
-            max-width: 750px;
-            background: #1e1e1e;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+            max-width: 440px;
+            height: 100vh;
+            max-height: 900px;
+            background: var(--bg-color);
+            border-radius: 0;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.9);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow-y: auto;
+            border: 2px solid var(--border-color);
         }
+
+        @media(min-width: 480px) {
+            .phone-frame {
+                border-radius: 24px;
+                height: 92vh;
+            }
+        }
+
         .screen {
             display: none;
+            padding: 24px;
+            flex: 1;
+            box-sizing: border-box;
+            animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
+
         .active-screen {
-            display: block;
+            display: flex;
+            flex-direction: column;
         }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         h2 {
-            color: #ff9800;
+            color: var(--accent-gold);
             text-align: center;
-            border-bottom: 2px solid #333;
+            margin-bottom: 22px;
+            font-size: 22px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            border-bottom: 2px solid var(--border-color);
             padding-bottom: 10px;
         }
+
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 16px;
         }
+
         label {
             display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: #b0bec5;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: var(--text-muted);
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
+
         input, select {
             width: 100%;
-            padding: 10px;
-            background: #2d2d2d;
-            border: 1px solid #444;
-            color: #fff;
-            border-radius: 6px;
+            padding: 12px 14px;
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            border-radius: 8px;
             box-sizing: border-box;
+            font-size: 15px;
+            outline: none;
+            transition: all 0.3s ease;
         }
-        button {
+
+        input:focus, select:focus {
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 8px rgba(243, 156, 18, 0.2);
+        }
+
+        .btn-primary {
             width: 100%;
-            padding: 12px;
-            background: #ff9800;
-            color: #121212;
+            padding: 15px;
+            background: linear-gradient(135deg, #d35400, #f39c12);
+            color: #ffffff;
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
             margin-top: 15px;
-            transition: background 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 6px 20px rgba(243, 156, 18, 0.35);
+            transition: transform 0.2s, filter 0.2s;
         }
-        button:hover {
-            background: #f57c00;
+
+        .btn-primary:active {
+            transform: scale(0.98);
+            filter: brightness(0.9);
         }
-        .party-list-container {
-            max-height: 250px;
-            overflow-y: auto;
-            border: 1px solid #444;
-            padding: 10px;
-            border-radius: 6px;
-            background: #252525;
-            margin-bottom: 15px;
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            margin-top: 10px;
         }
-        .party-option {
-            background: #2a2a2a;
-            padding: 10px;
+
+        .btn-load {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            margin-top: 10px;
+        }
+
+        /* PMO Dashboard Styling */
+        .pmo-header {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            padding: 18px;
+            border-radius: 12px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+            margin-bottom: 20px;
+        }
+
+        .pmo-header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 4px;
+            background: linear-gradient(90deg, #ff9933, #ffffff, #138808);
+        }
+
+        .pmo-badge {
+            font-size: 12px;
+            background: rgba(243, 156, 18, 0.15);
+            color: var(--accent-gold);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-block;
             margin-bottom: 8px;
-            border-radius: 6px;
-            border: 1px solid #444;
+            text-transform: uppercase;
         }
-        .party-option label {
-            font-weight: normal;
-            color: #cfd8dc;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+
+        .pmo-name-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #ffffff;
+            margin-bottom: 4px;
+        }
+
+        .pmo-party-info {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .dash-card {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            padding: 14px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .dash-card span {
+            display: block;
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--accent-gold);
+            margin-top: 6px;
+        }
+
+        /* News Ticker Bar */
+        .news-ticker {
+            background: #111;
+            border-left: 4px solid var(--accent-gold);
+            padding: 10px 14px;
+            font-size: 13px;
+            color: #d2d6dc;
+            border-radius: 0 8px 8px 0;
+            margin-top: auto;
+        }
+
+        .save-status {
+            font-size: 11px;
+            color: #2ecc71;
+            text-align: center;
+            margin-top: 8px;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
 
-<div class="game-container">
+<div class="phone-frame">
 
-    <!-- SCREEN 1: Character Creation -->
-    <div id="screen-character" class="screen active-screen">
-        <h2>Political Career Initialization</h2>
+    <!-- SCREEN 1: Interactive Character & Real 10 Parties Setup -->
+    <div id="screen-setup" class="screen active-screen">
+        <h2>Nation Builder Setup</h2>
+        
         <div class="form-group">
-            <label>Leader Name:</label>
-            <input type="text" id="char-name" placeholder="Enter your name">
+            <label>Leader Name</label>
+            <input type="text" id="pm-name" placeholder="Enter your full name">
         </div>
+
         <div class="form-group">
-            <label>Select State:</label>
-            <select id="char-state">
+            <label>Home State</label>
+            <select id="pm-state">
                 <option value="Uttarakhand">Uttarakhand</option>
                 <option value="Uttar Pradesh">Uttar Pradesh</option>
                 <option value="Delhi">Delhi</option>
                 <option value="Bihar">Bihar</option>
                 <option value="Maharashtra">Maharashtra</option>
+                <option value="West Bengal">West Bengal</option>
                 <option value="Tamil Nadu">Tamil Nadu</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label>Constituency / Seat:</label>
-            <input type="text" id="char-constituency" placeholder="e.g. Almora or Varanasi">
-        </div>
-        <div class="form-group">
-            <label>Political Ideology:</label>
-            <select id="char-ideology">
-                <option value="Nationalism">Nationalism</option>
-                <option value="Socialism">Socialism</option>
-                <option value="Capitalism">Capitalism</option>
-                <option value="Secularism">Secularism</option>
-            </select>
-        </div>
-        <button type="button" onclick="saveCharacter()">Next Step</button>
-    </div>
-
-    <!-- SCREEN 2: Party Hub -->
-    <div id="screen-party-hub" class="screen">
-        <h2>Party Selection</h2>
-        <p>How would you like to enter politics?</p>
-        <button onclick="goToExistingParties()">Join Existing Party</button>
-        <button onclick="goToCreateParty()" style="background: #0288d1; color: white;">Create Political Party</button>
-    </div>
-
-    <!-- SCREEN 3A: Existing Parties -->
-    <div id="screen-existing-parties" class="screen">
-        <h2>Select Existing Political Party</h2>
-        <div class="party-list-container">
-            <div class="party-option"><label><input type="radio" name="party" value="Bharatiya Janata Party (BJP)" checked> Bharatiya Janata Party (BJP)</label></div>
-            <div class="party-option"><label><input type="radio" name="party" value="Indian National Congress (INC)"> Indian National Congress (INC)</label></div>
-            <div class="party-option"><label><input type="radio" name="party" value="Aam Aadmi Party (AAP)"> Aam Aadmi Party (AAP)</label></div>
-            <div class="party-option"><label><input type="radio" name="party" value="Samajwadi Party (SP)"> Samajwadi Party (SP)</label></div>
-            <div class="party-option"><label><input type="radio" name="party" value="Bahujan Samaj Party (BSP)"> Bahujan Samaj Party (BSP)</label></div>
-            <div class="party-option"><label><input type="radio" name="party" value="All India Trinamool Congress (TMC)"> All India Trinamool Congress (TMC)</label></div>
-        </div>
-        <button onclick="confirmExistingParty()">Join Party & Proceed</button>
-    </div>
-
-    <!-- SCREEN 3B: Create Party -->
-    <div id="screen-create-party" class="screen">
-        <h2>Create New Party</h2>
-        <div class="form-group">
-            <label>Party Name:</label>
-            <input type="text" id="custom-party-name" placeholder="e.g. Janhit Party">
-        </div>
-        <button onclick="confirmCustomParty()">Register Party & Proceed</button>
-    </div>
-
-    <!-- SCREEN 4: Dashboard & Simulation Clock -->
-    <div id="screen-dashboard" class="screen">
-        <h2>Election Dashboard</h2>
-        
-        <div class="dashboard-card" style="background: #252525; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #ff9800;">
-            <p><strong>Leader:</strong> <span id="disp-name"></span></p>
-            <p><strong>Party:</strong> <span id="disp-party"></span></p>
-            <p><strong>Constituency:</strong> <span id="disp-constituency"></span> (<span id="disp-state"></span>)</p>
-            <p><strong>Total Budget:</strong> ₹<span id="disp-budget">1000</span> Crores</p>
-        </div>
-
-        <div style="text-align: center; font-size: 20px; font-weight: bold; color: #e91e63; margin: 15px 0; background: #2d2d2d; padding: 12px; border-radius: 8px; border: 1px solid #444;">
-            Election Countdown:<br>
-            <span id="game-days">90</span> Days | <span id="game-hours">00</span> Hours | <span id="game-minutes">00</span> Mins
-        </div>
-
-        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-            <button id="btn-pause" onclick="setTimeSpeed('pause')" style="margin-top:0; background:#37474f;">Pause</button>
-            <button id="btn-normal" onclick="setTimeSpeed('normal')" style="margin-top:0; background:#00897b;">Forward (1x)</button>
-            <button id="btn-fast" onclick="setTimeSpeed('fast')" style="margin-top:0; background:#37474f;">Fast Forward (5x)</button>
-        </div>
-
-        <button onclick="startCampaign()" style="background: #e91e63; color: white;">Start Campaign Now</button>
-    </div>
-
-    <!-- SCREEN 5: Alliance & Model Code of Conduct -->
-    <div id="screen-alliance" class="screen">
-        <h2>Election Commission: Model Code of Conduct</h2>
-        <div style="background: #b71c1c; color: #fff; padding: 10px; text-align: center; border-radius: 6px; font-weight: bold; margin-bottom: 15px; font-size: 14px;">
-            ⚠️ MODEL CODE OF CONDUCT (MCC) IS ACTIVE!
-        </div>
-        <p>Elections have been announced. Choose your strategy:</p>
-        
-        <div class="form-group">
-            <label>Choose Campaign Strategy:</label>
-            <select id="alliance-choice" onchange="toggleAllianceList()">
-                <option value="solo">Contest Solo (Alone)</option>
-                <option value="alliance">Form Alliance with Existing Party</option>
+                <option value="Gujarat">Gujarat</option>
             </select>
         </div>
 
-        <div id="alliance-party-box" style="display: none;">
-            <label>Select Partner Party for Alliance:</label>
-            <div class="party-list-container">
-                <div class="party-option"><label><input type="radio" name="alliance-partner" value="Bharatiya Janata Party (BJP)" checked> Bharatiya Janata Party (BJP)</label></div>
-                <div class="party-option"><label><input type="radio" name="alliance-partner" value="Indian National Congress (INC)"> Indian National Congress (INC)</label></div>
-                <div class="party-option"><label><input type="radio" name="alliance-partner" value="Aam Aadmi Party (AAP)"> Aam Aadmi Party (AAP)</label></div>
-            </div>
+        <div class="form-group">
+            <label>Constituency / Seat</label>
+            <input type="text" id="pm-constituency" placeholder="e.g. Varanasi, Almora, New Delhi">
         </div>
 
-        <button onclick="confirmAlliance()" style="background: #4caf50; color: white;">Confirm Strategy & Proceed to Tickets</button>
-        <button onclick="goBackToDashboard()" style="background: #607d8b; color: white;">Back to Dashboard</button>
-    </div>
-
-    <!-- SCREEN 6: 543 Constituencies Ticket Distribution -->
-    <div id="screen-tickets" class="screen">
-        <h2>543 Parliamentary Constituencies & Tickets</h2>
-        <p>Review constituencies and confirm candidate tickets.</p>
-        
-        <div style="background: #37474f; color: #ff9800; padding: 5px 10px; border-radius: 4px; font-weight: bold; display: inline-block; margin-bottom: 10px;" id="seat-count-display">Total: 543 Seats</div>
-
         <div class="form-group">
-            <label>Filter by State / UT:</label>
-            <select id="ticket-state-filter" onchange="filterConstituencies()">
-                <option value="ALL">All India (Total 543 Seats)</option>
-                <option value="Uttar Pradesh">Uttar Pradesh (80)</option>
-                <option value="Maharashtra">Maharashtra (48)</option>
-                <option value="Uttarakhand">Uttarakhand (5)</option>
-                <option value="Delhi">Delhi (7)</option>
+            <label>Political Party (India)</label>
+            <select id="pm-party">
+                <option value="Bharatiya Janata Party (BJP) - 🪷 Lotus">Bharatiya Janata Party (BJP) — 🪷 Lotus</option>
+                <option value="Indian National Congress (INC) - 🖐️ Hand">Indian National Congress (INC) — 🖐️ Hand</option>
+                <option value="Aam Aadmi Party (AAP) - 🧹 Broom">Aam Aadmi Party (AAP) — 🧹 Broom</option>
+                <option value="Samajwadi Party (SP) - 🚲 Cycle">Samajwadi Party (SP) — 🚲 Cycle</option>
+                <option value="All India Trinamool Congress (TMC) - 🌿 Grass & Flowers">All India Trinamool Congress (TMC) — 🌿 Grass & Flowers</option>
+                <option value="Bahujan Samaj Party (BSP) - 🐘 Elephant">Bahujan Samaj Party (BSP) — 🐘 Elephant</option>
+                <option value="Dravida Munnetra Kazhagam (DMK) - 🌅 Rising Sun">Dravida Munnetra Kazhagam (DMK) — 🌅 Rising Sun</option>
+                <option value="Rashtriya Janata Dal (RJD) - 🏮 Lantern">Rashtriya Janata Dal (RJD) — 🏮 Lantern</option>
+                <option value="Janata Dal (United) [JD(U)] - 🏹 Arrow">Janata Dal (United) [JD(U)] — 🏹 Arrow</option>
+                <option value="Shiv Sena (SS) - 🐅 Tiger / Bow-Arrow">Shiv Sena (SS) — 🐅 Tiger</option>
             </select>
         </div>
 
-        <div class="party-list-container" id="constituency-container" style="max-height: 250px; overflow-y: auto;"></div>
-
-        <button onclick="confirmAllTickets()" style="background: #4caf50; color: white;">Confirm Tickets & Open Master Dashboard</button>
+        <button class="btn-primary" onclick="beginPoliticalCareer()">Begin Your Political Career</button>
+        <button class="btn-primary btn-load" onclick="loadGameData()">Load Saved Game</button>
     </div>
 
-    <!-- SCREEN 7: Master Campaign Dashboard -->
-    <div id="screen-master-dashboard" class="screen">
-        <h2>Master Election Campaign Dashboard</h2>
+    <!-- SCREEN 2: Prime Minister Office (PMO) Dashboard -->
+    <div id="screen-pmo" class="screen">
+        <h2>South Block - PMO</h2>
         
-        <div class="dashboard-card" style="background: #252525; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #00897b;">
-            <p><strong>Leader:</strong> <span id="master-disp-name"></span> | <strong>Party:</strong> <span id="master-disp-party"></span></p>
-            <p><strong>Remaining Budget:</strong> ₹<span id="master-disp-budget">1000</span> Crores | <strong>Strategy:</strong> <span id="master-disp-strategy">Solo</span></p>
+        <div class="pmo-header">
+            <div class="pmo-badge">🇮🇳 Prime Minister of India</div>
+            <div class="pmo-name-title" id="disp-name">Leader Name</div>
+            <div class="pmo-party-info" id="disp-party">Party Info</div>
         </div>
 
-        <div class="dashboard-card" style="background: #1a237e; padding: 12px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #3f51b5;">
-            <h4 style="margin: 0 0 5px 0; color: #ffeb3b;">📊 Secret Intelligence Report & Opinion Poll</h4>
-            <p id="opinion-poll-text" style="font-size: 13px; margin: 0; color: #e8eaf6;">Analyzing ground reality...</p>
+        <div class="dashboard-grid">
+            <div class="dash-card">Constituency <span id="disp-constituency">-</span></div>
+            <div class="dash-card">Home State <span id="disp-state">-</span></div>
+            <div class="dash-card">Approval Rating <span id="disp-approval">88%</span></div>
+            <div class="dash-card">National Stability <span id="disp-stability">92%</span></div>
         </div>
 
-        <div style="display: flex; gap: 5px; margin-bottom: 15px; flex-wrap: wrap;">
-            <button onclick="switchTab('rallies')" style="flex: 1; margin:0; padding:8px; font-size:13px; background:#37474f;">Rallies</button>
-            <button onclick="switchTab('media')" style="flex: 1; margin:0; padding:8px; font-size:13px; background:#37474f;">Media & Ads</button>
-            <button onclick="switchTab('press')" style="flex: 1; margin:0; padding:8px; font-size:13px; background:#37474f;">Press Meet</button>
-            <button onclick="switchTab('ground')" style="flex: 1; margin:0; padding:8px; font-size:13px; background:#37474f;">Ground Work</button>
-        </div>
+        <button class="btn-primary" onclick="alert('Cabinet Policy & Governance features coming up next!')" style="background: linear-gradient(135deg, #2980b9, #2c3e50);">Manage Cabinet & Policies</button>
+        <button class="btn-primary btn-secondary" onclick="manualSaveGame()">Save Game Now</button>
+        <div class="save-status" id="save-status-msg">Game auto-saved successfully.</div>
 
-        <!-- TAB 1 -->
-        <div id="tab-rallies" class="campaign-tab-content" style="background: #252525; padding: 12px; border-radius: 6px; margin-bottom: 15px;">
-            <h4 style="color: #ff9800; margin-top:0;">Megarally</h4>
-            <div class="form-group">
-                <label>Rally Budget (₹ Crores):</label>
-                <input type="number" id="rally-budget-input" value="50" min="10" max="500">
-            </div>
-            <button onclick="conductMegaRally()" style="background: #ff9800; color: #121212;">Organize Mega Rally</button>
+        <div class="news-ticker" id="news-ticker-text" style="margin-top: 15px;">
+            📢 <strong>Breaking News:</strong> New Prime Minister takes oath at Rashtrapati Bhavan. Markets and political circles react strongly!
         </div>
-
-        <!-- TAB 2 -->
-        <div id="tab-media" class="campaign-tab-content" style="display: none; background: #252525; padding: 12px; border-radius: 6px; margin-bottom: 15px;">
-            <h4 style="color: #ff9800; margin-top:0;">Media & Ads</h4>
-            <div class="form-group">
-                <label>Ad Budget (₹ Crores):</label>
-                <input type="number" id="media-budget-input" value="30" min="5" max="300">
-            </div>
-            <button onclick="investInMedia()" style="background: #0288d1; color: white;">Launch Media Campaign</button>
-        </div>
-
-        <!-- TAB 3 -->
-        <div id="tab-press" class="campaign-tab-content" style="display: none; background: #252525; padding: 12px; border-radius: 6px; margin-bottom: 15px;">
-            <h4 style="color: #ff9800; margin-top:0;">Press Conference</h4>
-            <button onclick="holdPressConference()" style="background: #e91e63; color: white;">Hold Press Meet</button>
-        </div>
-
-        <!-- TAB 4 -->
-        <div id="tab-ground" class="campaign-tab-content" style="display: none; background: #252525; padding: 12px; border-radius: 6px; margin-bottom: 15px;">
-            <h4 style="color: #ff9800; margin-top:0;">Ground Campaign</h4>
-            <button onclick="conductGroundCampaign()" style="background: #4caf50; color: white;">Deploy Ground Workers (₹10 Cr)</button>
-        </div>
-
-        <div style="background: #1e1e1e; padding: 10px; border-radius: 6px; max-height: 90px; overflow-y: auto; margin-bottom: 15px;">
-            <div id="campaign-log" style="font-size: 12px; color: #81c784;">Dashboard active.</div>
-        </div>
-
-        <button onclick="resumeSimulationClockFromDashboard()" style="background: #607d8b; color: white;">Resume Time & Return</button>
     </div>
 
-            </div>
-    <script>
-    let playerData = {
-        name: "", state: "", constituency: "", ideology: "", party: "",
-        budget: 1000, remainingMinutes: 90 * 24 * 60, strategy: "Solo"
+</div>
+
+<script>
+    let gameData = {
+        name: "",
+        state: "",
+        constituency: "",
+        party: "",
+        approval: "88%",
+        stability: "92%"
     };
 
-    let gameTimer = null;
-    let clockSpeed = 1000;
-    let allConstituenciesData = [];
-
-    function saveCharacter() {
-        const nameInput = document.getElementById('char-name').value.trim();
-        const constituencyInput = document.getElementById('char-constituency').value.trim();
-        if (!nameInput || !constituencyInput) { alert('Fill name and constituency!'); return; }
-        playerData.name = nameInput;
-        playerData.state = document.getElementById('char-state').value;
-        playerData.constituency = constituencyInput;
-        playerData.ideology = document.getElementById('char-ideology').value;
-
-        document.getElementById('screen-character').classList.remove('active-screen');
-        document.getElementById('screen-party-hub').classList.add('active-screen');
-    }
-
-    function goToExistingParties() {
-        document.getElementById('screen-party-hub').classList.remove('active-screen');
-        document.getElementById('screen-existing-parties').classList.add('active-screen');
-    }
-
-    function goToCreateParty() {
-        document.getElementById('screen-party-hub').classList.remove('active-screen');
-        document.getElementById('screen-create-party').classList.add('active-screen');
-    }
-
-    function confirmExistingParty() {
-        const selected = document.querySelector('input[name="party"]:checked');
-        playerData.party = selected ? selected.value : "Independent";
-        loadDashboard();
-    }
-
-    function confirmCustomParty() {
-        const pName = document.getElementById('custom-party-name').value.trim();
-        if(!pName) { alert('Enter party name!'); return; }
-        playerData.party = pName;
-        loadDashboard();
-    }
-
-    function loadDashboard() {
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
-        document.getElementById('screen-dashboard').classList.add('active-screen');
-        document.getElementById('disp-name').innerText = playerData.name;
-        document.getElementById('disp-party').innerText = playerData.party;
-        document.getElementById('disp-constituency').innerText = playerData.constituency;
-        document.getElementById('disp-state').innerText = playerData.state;
-        document.getElementById('disp-budget').innerText = playerData.budget;
-        updateClockDisplay();
-        startSimulationClock();
-    }
-
-    function updateClockDisplay() {
-        let totalMins = playerData.remainingMinutes;
-        let days = Math.floor(totalMins / (24 * 60));
-        let hours = Math.floor((totalMins % (24 * 60)) / 60);
-        let mins = totalMins % 60;
-        if(document.getElementById('game-days')) document.getElementById('game-days').innerText = days;
-        if(document.getElementById('game-hours')) document.getElementById('game-hours').innerText = String(hours).padStart(2, '0');
-        if(document.getElementById('game-minutes')) document.getElementById('game-minutes').innerText = String(mins).padStart(2, '0');
-    }
-
-    function startSimulationClock() {
-        if(gameTimer) clearInterval(gameTimer);
-        gameTimer = setInterval(() => {
-            if(playerData.remainingMinutes > 0) {
-                playerData.remainingMinutes--;
-                updateClockDisplay();
-            }
-        }, clockSpeed);
-    }
-
-    function setTimeSpeed(speedType) {
-        if(speedType === 'pause') { if(gameTimer) clearInterval(gameTimer); }
-        else if(speedType === 'normal') { clockSpeed = 1000; startSimulationClock(); }
-        else if(speedType === 'fast') { clockSpeed = 200; startSimulationClock(); }
-    }
-
-    function startCampaign() {
-        if(gameTimer) clearInterval(gameTimer);
-        document.getElementById('screen-dashboard').classList.remove('active-screen');
-        document.getElementById('screen-alliance').classList.add('active-screen');
-    }
-
-    function goBackToDashboard() {
-        document.getElementById('screen-alliance').classList.remove('active-screen');
-        document.getElementById('screen-dashboard').classList.add('active-screen');
-        startSimulationClock();
-    }
-
-    function toggleAllianceList() {
-        const choice = document.getElementById('alliance-choice').value;
-        document.getElementById('alliance-party-box').style.display = (choice === 'alliance') ? 'block' : 'none';
-    }
-
-    function confirmAlliance() {
-        const choice = document.getElementById('alliance-choice').value;
-        playerData.strategy = (choice === 'solo') ? "Contesting Solo" : "Alliance Formation";
-        document.getElementById('screen-alliance').classList.remove('active-screen');
-        document.getElementById('screen-tickets').classList.add('active-screen');
-        generateConstituencies();
-    }
-
-    function generateConstituencies() {
-        if(allConstituenciesData.length > 0) return;
-        for(let i=1; i<=543; i++) {
-            allConstituenciesData.push({ id: i, state: i<=80 ? "Uttar Pradesh" : (i<=128 ? "Maharashtra" : "Uttarakhand"), name: `Seat ${i}`, cand: [`Candidate A`, `Candidate B`] });
+    // गेम शुरू होने पर ऑटोमैटिक डेटा सेव करने का फंक्शन
+    function autoSaveGame() {
+        localStorage.setItem('pm_simulator_save', JSON.stringify(gameData));
+        let statusMsg = document.getElementById('save-status-msg');
+        if(statusMsg) {
+            statusMsg.innerText = "Game auto-saved successfully.";
+            setTimeout(() => { statusMsg.innerText = ""; }, 3000);
         }
-        renderConstituencies("ALL");
     }
 
-    function renderConstituencies(filter) {
-        let container = document.getElementById('constituency-container');
-        container.innerHTML = "";
-        allConstituenciesData.slice(0, 25).forEach(item => {
-            container.innerHTML += `<div style="background:#2a2a2a; padding:8px; margin-bottom:6px; border-radius:4px;">#${item.id} - ${item.name} (${item.state})</div>`;
-        });
+    // मैन्युअल सेव बटन के लिए
+    function manualSaveGame() {
+        localStorage.setItem('pm_simulator_save', JSON.stringify(gameData));
+        alert('Game saved successfully!');
     }
 
-    function filterConstituencies() {
-        renderConstituencies(document.getElementById('ticket-state-filter').value);
+    // लोड करने के लिए फंक्शन
+    function loadGameData() {
+        let savedData = localStorage.getItem('pm_simulator_save');
+        if (!savedData) {
+            alert('No saved game found!');
+            return;
+        }
+
+        gameData = JSON.parse(savedData);
+
+        // स्क्रीन पर डेटा सेट करना
+        document.getElementById('disp-name').innerText = gameData.name;
+        document.getElementById('disp-party').innerText = gameData.party;
+        document.getElementById('disp-constituency').innerText = gameData.constituency;
+        document.getElementById('disp-state').innerText = gameData.state;
+        document.getElementById('disp-approval').innerText = gameData.approval;
+        document.getElementById('disp-stability').innerText = gameData.stability;
+
+        // स्क्रीन स्विच करना
+        document.getElementById('screen-setup').classList.remove('active-screen');
+        document.getElementById('screen-pmo').classList.add('active-screen');
+        alert('Game loaded successfully!');
     }
 
-    function confirmAllTickets() {
-        alert('Tickets confirmed! Entering Master Campaign Dashboard.');
-        openMasterDashboard();
+    function beginPoliticalCareer() {
+        const name = document.getElementById('pm-name').value.trim();
+        const constituency = document.getElementById('pm-constituency').value.trim();
+        const state = document.getElementById('pm-state').value;
+        const party = document.getElementById('pm-party').value;
+
+        if (!name || !constituency) {
+            alert('Please enter both your name and constituency!');
+            return;
+        }
+
+        // ऑब्जेक्ट में वैल्यू डालना
+        gameData.name = name;
+        gameData.state = state;
+        gameData.constituency = constituency;
+        gameData.party = party;
+
+        // डेटा डिस्प्ले में भेजना
+        document.getElementById('disp-name').innerText = gameData.name;
+        document.getElementById('disp-party').innerText = gameData.party;
+        document.getElementById('disp-constituency').innerText = gameData.constituency;
+        document.getElementById('disp-state').innerText = gameData.state;
+
+        // ऑटोसेव कॉल करना
+        autoSaveGame();
+
+        // स्क्रीन स्विच करना
+        document.getElementById('screen-setup').classList.remove('active-screen');
+        document.getElementById('screen-pmo').classList.add('active-screen');
     }
 
-    let campaignStats = { popularity: 35 };
-
-    function openMasterDashboard() {
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
-        document.getElementById('screen-master-dashboard').classList.add('active-screen');
-        document.getElementById('master-disp-name').innerText = playerData.name;
-        document.getElementById('master-disp-party').innerText = playerData.party;
-        document.getElementById('master-disp-budget').innerText = playerData.budget;
-        document.getElementById('master-disp-strategy').innerText = playerData.strategy;
-        updateOpinionPoll();
-    }
-
-    function switchTab(tabName) {
-        ['rallies', 'media', 'press', 'ground'].forEach(t => {
-            document.getElementById(`tab-${t}`).style.display = (t === tabName) ? 'block' : 'none';
-        });
-    }
-
-    function updateOpinionPoll() {
-        let pollBox = document.getElementById('opinion-poll-text');
-        pollBox.innerHTML = `🟢 <strong>Popularity:</strong> ${campaignStats.popularity}%`;
-    }
-
-    function logAction(msg) {
-        let logDiv = document.getElementById('campaign-log');
-        logDiv.innerHTML = `> ${msg}<br>` + logDiv.innerHTML;
-    }
-
-    function conductMegaRally() {
-        let cost = parseInt(document.getElementById('rally-budget-input').value) || 50;
-        if(playerData.budget < cost) { alert('Low budget!'); return; }
-        playerData.budget -= cost;
-        campaignStats.popularity = Math.min(95, campaignStats.popularity + 5);
-        document.getElementById('master-disp-budget').innerText = playerData.budget;
-        logAction(`Mega rally organized (Cost: ₹${cost} Cr).`);
-        updateOpinionPoll();
-    }
-
-    function investInMedia() {
-        let cost = parseInt(document.getElementById('media-budget-input').value) || 30;
-        if(playerData.budget < cost) { alert('Low budget!'); return; }
-        playerData.budget -= cost;
-        campaignStats.popularity = Math.min(95, campaignStats.popularity + 4);
-        document.getElementById('master-disp-budget').innerText = playerData.budget;
-        logAction(`Media campaign launched.`);
-        updateOpinionPoll();
-    }
-
-    function holdPressConference() {
-        campaignStats.popularity = Math.min(95, campaignStats.popularity + 5);
-        logAction(`Press conference held.`);
-        updateOpinionPoll();
-    }
-
-    function conductGroundCampaign() {
-        if(playerData.budget < 10) { alert('Requires ₹10 Crores!'); return; }
-        playerData.budget -= 10;
-        campaignStats.popularity = Math.min(95, campaignStats.popularity + 3);
-        document.getElementById('master-disp-budget').innerText = playerData.budget;
-        logAction(`Ground workers deployed.`);
-        updateOpinionPoll();
-    }
-
-    function resumeSimulationClockFromDashboard() {
-        loadDashboard();
-    }
+    // ऑटोसेव को बैकग्राउंड में हर 30 सेकंड में एक्टिव रखना
+    setInterval(() => {
+        if(gameData.name !== "") {
+            autoSaveGame();
+        }
+    }, 30000);
 </script>
+
+</body>
     </html>
     
-            
