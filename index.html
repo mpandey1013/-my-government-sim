@@ -70,6 +70,30 @@
         button:hover {
             background: #f57c00;
         }
+        .party-list-container {
+            max-height: 250px;
+            overflow-y: auto;
+            border: 1px solid #444;
+            padding: 10px;
+            border-radius: 6px;
+            background: #252525;
+            margin-bottom: 15px;
+        }
+        .party-option {
+            background: #2a2a2a;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            border: 1px solid #444;
+        }
+        .party-option label {
+            font-weight: normal;
+            color: #cfd8dc;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
     </style>
 </head>
 <body>
@@ -118,48 +142,7 @@
         <button onclick="goToCreateParty()" style="background: #0288d1; color: white;">Create Political Party</button>
     </div>
 
-</div>
-
-<script>
-    let playerData = {
-        name: "",
-        state: "",
-        constituency: "",
-        ideology: ""
-    };
-
-    function saveCharacter() {
-        const nameInput = document.getElementById('char-name').value.trim();
-        const constituencyInput = document.getElementById('char-constituency').value.trim();
-
-        if (!nameInput || !constituencyInput) {
-            alert('Please fill in your name and constituency!');
-            return;
-        }
-
-        playerData.name = nameInput;
-        playerData.state = document.getElementById('char-state').value;
-        playerData.constituency = constituencyInput;
-        playerData.ideology = document.getElementById('char-ideology').value;
-
-        // स्क्रीन 1 को छुपाकर स्क्रीन 2 (Party Hub) दिखाना
-        document.getElementById('screen-character').classList.remove('active-screen');
-        document.getElementById('screen-party-hub').classList.add('active-screen');
-    }
-
-    function goToExistingParties() {
-        alert('Proceeding to Existing Parties selection...');
-    }
-
-    function goToCreateParty() {
-        alert('Proceeding to Create New Party...');
-    }
-</script>
-
-</body>
-    </html>
-
-<!-- SCREEN 3A: Existing Parties -->
+    <!-- SCREEN 3A: Existing Parties -->
     <div id="screen-existing-parties" class="screen">
         <h2>Select Existing Political Party</h2>
         <div class="party-list-container">
@@ -169,12 +152,6 @@
             <div class="party-option"><label><input type="radio" name="party" value="Samajwadi Party (SP)"> Samajwadi Party (SP)</label></div>
             <div class="party-option"><label><input type="radio" name="party" value="Bahujan Samaj Party (BSP)"> Bahujan Samaj Party (BSP)</label></div>
             <div class="party-option"><label><input type="radio" name="party" value="All India Trinamool Congress (TMC)"> All India Trinamool Congress (TMC)</label></div>
-            <div class="party-option"><label><input type="radio" name="party" value="Janata Dal (United) (JDU)"> Janata Dal (United) (JDU)</label></div>
-            <div class="party-option"><label><input type="radio" name="party" value="Dravida Munnetra Kazhagam (DMK)"> Dravida Munnetra Kazhagam (DMK)</label></div>
-            <div class="party-option"><label><input type="radio" name="party" value="Shiv Sena (SS)"> Shiv Sena (SS)</label></div>
-            <div class="party-option"><label><input type="radio" name="party" value="Nationalist Congress Party (NCP)"> Nationalist Congress Party (NCP)</label></div>
-            <div class="party-option"><label><input type="radio" name="party" value="Communist Party of India (Marxist) (CPIM)"> Communist Party of India (Marxist) (CPIM)</label></div>
-            <div class="party-option"><label><input type="radio" name="party" value="National People's Party (NPP)"> National People's Party (NPP)</label></div>
         </div>
         <button onclick="confirmExistingParty()">Join Party & Proceed</button>
     </div>
@@ -186,18 +163,6 @@
             <label>Party Name:</label>
             <input type="text" id="custom-party-name" placeholder="e.g. Janhit Party">
         </div>
-        <div class="form-group">
-            <label>Party Symbol / Logo:</label>
-            <input type="text" id="custom-party-logo" placeholder="e.g. Rising Sun">
-        </div>
-        <div class="form-group">
-            <label>Party President:</label>
-            <input type="text" id="custom-party-president" placeholder="President name">
-        </div>
-        <div class="form-group">
-            <label>Vice President:</label>
-            <input type="text" id="custom-party-vp" placeholder="Vice President name">
-        </div>
         <button onclick="confirmCustomParty()">Register Party & Proceed</button>
     </div>
 
@@ -205,34 +170,34 @@
     <div id="screen-dashboard" class="screen">
         <h2>Election Dashboard</h2>
         
-        <div class="dashboard-card">
+        <div class="dashboard-card" style="background: #252525; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #ff9800;">
             <p><strong>Leader:</strong> <span id="disp-name"></span></p>
             <p><strong>Party:</strong> <span id="disp-party"></span></p>
             <p><strong>Constituency:</strong> <span id="disp-constituency"></span> (<span id="disp-state"></span>)</p>
-            <p><strong>Candidate Status:</strong> Prime Minister Candidate Cleared</p>
             <p><strong>Total Budget:</strong> ₹<span id="disp-budget">1000</span> Crores</p>
         </div>
 
-        <div class="timer-box">
+        <div style="text-align: center; font-size: 20px; font-weight: bold; color: #e91e63; margin: 15px 0; background: #2d2d2d; padding: 12px; border-radius: 8px; border: 1px solid #444;">
             Election Countdown:<br>
             <span id="game-days">90</span> Days | <span id="game-hours">00</span> Hours | <span id="game-minutes">00</span> Mins
         </div>
 
-        <div class="time-controls">
-            <button id="btn-pause" onclick="setTimeSpeed('pause')">Pause</button>
-            <button id="btn-normal" class="active-speed" onclick="setTimeSpeed('normal')">Forward (1x)</button>
-            <button id="btn-fast" onclick="setTimeSpeed('fast')">Fast Forward (5x)</button>
+        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+            <button id="btn-pause" onclick="setTimeSpeed('pause')" style="margin-top:0; background:#37474f;">Pause</button>
+            <button id="btn-normal" onclick="setTimeSpeed('normal')" style="margin-top:0; background:#00897b;">Forward (1x)</button>
+            <button id="btn-fast" onclick="setTimeSpeed('fast')" style="margin-top:0; background:#37474f;">Fast Forward (5x)</button>
         </div>
 
         <button onclick="startCampaign()" style="background: #e91e63; color: white;">Start Campaign Now</button>
     </div>
-            <!-- SCREEN 5: Alliance & Model Code of Conduct -->
+
+    <!-- SCREEN 5: Alliance & Model Code of Conduct -->
     <div id="screen-alliance" class="screen">
         <h2>Election Commission: Model Code of Conduct</h2>
-        <div class="mcc-banner">
+        <div style="background: #b71c1c; color: #fff; padding: 10px; text-align: center; border-radius: 6px; font-weight: bold; margin-bottom: 15px; font-size: 14px;">
             ⚠️ MODEL CODE OF CONDUCT (MCC) IS ACTIVE!
         </div>
-        <p>Elections have been announced. You must decide how your political campaign will contest.</p>
+        <p>Elections have been announced. Choose your strategy:</p>
         
         <div class="form-group">
             <label>Choose Campaign Strategy:</label>
@@ -248,15 +213,6 @@
                 <div class="party-option"><label><input type="radio" name="alliance-partner" value="Bharatiya Janata Party (BJP)" checked> Bharatiya Janata Party (BJP)</label></div>
                 <div class="party-option"><label><input type="radio" name="alliance-partner" value="Indian National Congress (INC)"> Indian National Congress (INC)</label></div>
                 <div class="party-option"><label><input type="radio" name="alliance-partner" value="Aam Aadmi Party (AAP)"> Aam Aadmi Party (AAP)</label></div>
-                <div class="party-option"><label><input type="radio" name="alliance-partner" value="Samajwadi Party (SP)"> Samajwadi Party (SP)</label></div>
-                <div class="party-option"><label><input type="radio" name="alliance-partner" value="Bahujan Samaj Party (BSP)"> Bahujan Samaj Party (BSP)</label></div>
-                <div class="party-option"><label><input type="radio" name="alliance-partner" value="All India Trinamool Congress (TMC)"> All India Trinamool Congress (TMC)</label></div>
-                <div class="party-option"><label><input type="radio" name="alliance-partner" value="Janata Dal (United) (JDU)"> Janata Dal (United) (JDU)</label></div>
-                <div class="party-option"><label><input type="radio" name="alliance-partner" value="Dravida Munnetra Kazhagam (DMK)"> Dravida Munnetra Kazhagam (DMK)</label></div>
-                <div class="party-option"><label><input type="radio" name="alliance-partner" value="Shiv Sena (SS)"> Shiv Sena (SS)</label></div>
-                <div class="party-option"><label><input type="radio" name="alliance-partner" value="Nationalist Congress Party (NCP)"> Nationalist Congress Party (NCP)</label></div>
-                <div class="party-option"><label><input type="radio" name="alliance-partner" value="Communist Party of India (Marxist) (CPIM)"> Communist Party of India (Marxist) (CPIM)</label></div>
-                <div class="party-option"><label><input type="radio" name="alliance-partner" value="National People's Party (NPP)"> National People's Party (NPP)</label></div>
             </div>
         </div>
 
@@ -266,10 +222,10 @@
 
     <!-- SCREEN 6: 543 Constituencies Ticket Distribution -->
     <div id="screen-tickets" class="screen">
-        <h2>543 Parliamentary Constituencies & Ticket Distribution</h2>
-        <p>Review all 543 Lok Sabha constituencies and confirm candidate tickets.</p>
+        <h2>543 Parliamentary Constituencies & Tickets</h2>
+        <p>Review constituencies and confirm candidate tickets.</p>
         
-        <div class="counter-badge" id="seat-count-display">Total Constituencies Loaded: 543</div>
+        <div style="background: #37474f; color: #ff9800; padding: 5px 10px; border-radius: 4px; font-weight: bold; display: inline-block; margin-bottom: 10px;" id="seat-count-display">Total: 543 Seats</div>
 
         <div class="form-group">
             <label>Filter by State / UT:</label>
@@ -277,42 +233,12 @@
                 <option value="ALL">All India (Total 543 Seats)</option>
                 <option value="Uttar Pradesh">Uttar Pradesh (80)</option>
                 <option value="Maharashtra">Maharashtra (48)</option>
-                <option value="West Bengal">West Bengal (42)</option>
-                <option value="Bihar">Bihar (40)</option>
-                <option value="Tamil Nadu">Tamil Nadu (39)</option>
-                <option value="Madhya Pradesh">Madhya Pradesh (29)</option>
-                <option value="Karnataka">Karnataka (28)</option>
-                <option value="Gujarat">Gujarat (26)</option>
-                <option value="Rajasthan">Rajasthan (25)</option>
-                <option value="Andhra Pradesh">Andhra Pradesh (25)</option>
-                <option value="Kerala">Kerala (20)</option>
-                <option value="Telangana">Telangana (17)</option>
-                <option value="Assam">Assam (14)</option>
-                <option value="Punjab">Punjab (13)</option>
-                <option value="Chhattisgarh">Chhattisgarh (11)</option>
-                <option value="Haryana">Haryana (10)</option>
-                <option value="Delhi">Delhi (7)</option>
                 <option value="Uttarakhand">Uttarakhand (5)</option>
-                <option value="Jammu and Kashmir">Jammu and Kashmir (5)</option>
-                <option value="Himachal Pradesh">Himachal Pradesh (4)</option>
-                <option value="Arunachal Pradesh">Arunachal Pradesh (2)</option>
-                <option value="Goa">Goa (2)</option>
-                <option value="Manipur">Manipur (2)</option>
-                <option value="Meghalaya">Meghalaya (2)</option>
-                <option value="Tripura">Tripura (2)</option>
-                <option value="Dadra and Nagar Haveli and Daman and Diu">Dadra and Nagar Haveli and Daman and Diu (2)</option>
-                <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands (1)</option>
-                <option value="Chandigarh">Chandigarh (1)</option>
-                <option value="Lakshadweep">Lakshadweep (1)</option>
-                <option value="Ladakh">Ladakh (1)</option>
-                <option value="Puducherry">Puducherry (1)</option>
-                <option value="Mizoram">Mizoram (1)</option>
-                <option value="Nagaland">Nagaland (1)</option>
-                <option value="Sikkim">Sikkim (1)</option>
+                <option value="Delhi">Delhi (7)</option>
             </select>
         </div>
 
-        <div class="constituency-list-container" id="constituency-container"></div>
+        <div class="party-list-container" id="constituency-container" style="max-height: 250px; overflow-y: auto;"></div>
 
         <button onclick="confirmAllTickets()" style="background: #4caf50; color: white;">Confirm Tickets & Open Master Dashboard</button>
     </div>
@@ -321,167 +247,83 @@
     <div id="screen-master-dashboard" class="screen">
         <h2>Master Election Campaign Dashboard</h2>
         
-        <div class="dashboard-card" style="border-left-color: #00897b;">
+        <div class="dashboard-card" style="background: #252525; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #00897b;">
             <p><strong>Leader:</strong> <span id="master-disp-name"></span> | <strong>Party:</strong> <span id="master-disp-party"></span></p>
-            <p><strong>Remaining Budget:</strong> ₹<span id="master-disp-budget">1000</span> Crores | <strong>Current Strategy:</strong> <span id="master-disp-strategy">Solo</span></p>
+            <p><strong>Remaining Budget:</strong> ₹<span id="master-disp-budget">1000</span> Crores | <strong>Strategy:</strong> <span id="master-disp-strategy">Solo</span></p>
         </div>
 
-        <!-- Secret Intelligence Report / Opinion Poll -->
-        <div class="dashboard-card" style="background: #1a237e; border-left-color: #3f51b5;">
+        <div class="dashboard-card" style="background: #1a237e; padding: 12px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #3f51b5;">
             <h4 style="margin: 0 0 5px 0; color: #ffeb3b;">📊 Secret Intelligence Report & Opinion Poll</h4>
             <p id="opinion-poll-text" style="font-size: 13px; margin: 0; color: #e8eaf6;">Analyzing ground reality...</p>
         </div>
 
-        <!-- Navigation Tabs -->
         <div style="display: flex; gap: 5px; margin-bottom: 15px; flex-wrap: wrap;">
             <button onclick="switchTab('rallies')" style="flex: 1; margin:0; padding:8px; font-size:13px; background:#37474f;">Rallies</button>
             <button onclick="switchTab('media')" style="flex: 1; margin:0; padding:8px; font-size:13px; background:#37474f;">Media & Ads</button>
             <button onclick="switchTab('press')" style="flex: 1; margin:0; padding:8px; font-size:13px; background:#37474f;">Press Meet</button>
-            <button onclick="switchTab('ground')" style="flex: 1; margin:0; padding:8px; font-size:13px; background:#37474f;">Door-to-Door</button>
+            <button onclick="switchTab('ground')" style="flex: 1; margin:0; padding:8px; font-size:13px; background:#37474f;">Ground Work</button>
         </div>
 
-        <!-- TAB 1: Rallies -->
+        <!-- TAB 1 -->
         <div id="tab-rallies" class="campaign-tab-content" style="background: #252525; padding: 12px; border-radius: 6px; margin-bottom: 15px;">
-            <h4 style="color: #ff9800; margin-top:0;">Megarally & Public Gatherings</h4>
+            <h4 style="color: #ff9800; margin-top:0;">Megarally</h4>
             <div class="form-group">
-                <label>Target Region / State:</label>
-                <select id="rally-state">
-                    <option value="Uttarakhand">Uttarakhand</option>
-                    <option value="Uttar Pradesh">Uttar Pradesh</option>
-                    <option value="Maharashtra">Maharashtra</option>
-                    <option value="Bihar">Bihar</option>
-                    <option value="Delhi">Delhi</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Allocate Rally Budget (₹ Crores):</label>
+                <label>Rally Budget (₹ Crores):</label>
                 <input type="number" id="rally-budget-input" value="50" min="10" max="500">
             </div>
-            <button onclick="conductMegaRally()" style="background: #ff9800; color: #121212;">Organize Mega Rally & Boost Popularity</button>
+            <button onclick="conductMegaRally()" style="background: #ff9800; color: #121212;">Organize Mega Rally</button>
         </div>
 
-        <!-- TAB 2: Media & Ads -->
+        <!-- TAB 2 -->
         <div id="tab-media" class="campaign-tab-content" style="display: none; background: #252525; padding: 12px; border-radius: 6px; margin-bottom: 15px;">
-            <h4 style="color: #ff9800; margin-top:0;">Print Media & Social Ads Management</h4>
+            <h4 style="color: #ff9800; margin-top:0;">Media & Ads</h4>
             <div class="form-group">
-                <label>Ad Campaign Budget (₹ Crores):</label>
+                <label>Ad Budget (₹ Crores):</label>
                 <input type="number" id="media-budget-input" value="30" min="5" max="300">
             </div>
             <button onclick="investInMedia()" style="background: #0288d1; color: white;">Launch Media Campaign</button>
         </div>
 
-        <!-- TAB 3: Press Conference -->
+        <!-- TAB 3 -->
         <div id="tab-press" class="campaign-tab-content" style="display: none; background: #252525; padding: 12px; border-radius: 6px; margin-bottom: 15px;">
-            <h4 style="color: #ff9800; margin-top:0;">Live Press Conference</h4>
-            <div class="form-group">
-                <label>Select Stand / Stance:</label>
-                <select id="press-stance">
-                    <option value="aggressive">Aggressive Attack on Opponents</option>
-                    <option value="development">Focus on Development & Jobs</option>
-                    <option value="emotional">Emotional / Regional Appeal</option>
-                </select>
-            </div>
-            <button onclick="holdPressConference()" style="background: #e91e63; color: white;">Hold Press Conference</button>
+            <h4 style="color: #ff9800; margin-top:0;">Press Conference</h4>
+            <button onclick="holdPressConference()" style="background: #e91e63; color: white;">Hold Press Meet</button>
         </div>
 
-        <!-- TAB 4: Ground Campaign -->
+        <!-- TAB 4 -->
         <div id="tab-ground" class="campaign-tab-content" style="display: none; background: #252525; padding: 12px; border-radius: 6px; margin-bottom: 15px;">
-            <h4 style="color: #ff9800; margin-top:0;">Ground & Door-to-Door Campaign</h4>
-            <button onclick="conductGroundCampaign()" style="background: #4caf50; color: white;">Deploy Ground Workers (Cost: ₹10 Cr)</button>
+            <h4 style="color: #ff9800; margin-top:0;">Ground Campaign</h4>
+            <button onclick="conductGroundCampaign()" style="background: #4caf50; color: white;">Deploy Ground Workers (₹10 Cr)</button>
         </div>
 
-        <!-- Activity Log -->
-        <div class="dashboard-card" style="background: #1e1e1e; max-height: 100px; overflow-y: auto;">
-            <h4 style="margin: 0 0 5px 0; color: #b0bec5; font-size: 13px;">Campaign Activity Log:</h4>
-            <div id="campaign-log" style="font-size: 12px; color: #81c784;">Master Dashboard Active.</div>
+        <div style="background: #1e1e1e; padding: 10px; border-radius: 6px; max-height: 90px; overflow-y: auto; margin-bottom: 15px;">
+            <div id="campaign-log" style="font-size: 12px; color: #81c784;">Dashboard active.</div>
         </div>
 
-        <button onclick="resumeSimulationClockFromDashboard()" style="background: #607d8b; color: white;">Resume Time & Monitor Results</button>
+        <button onclick="resumeSimulationClockFromDashboard()" style="background: #607d8b; color: white;">Resume Time & Return</button>
     </div>
 
-                                                     </div>
+            </div>
     <script>
     let playerData = {
-        name: "",
-        state: "",
-        constituency: "",
-        ideology: "",
-        partyType: "",
-        party: "",
-        president: "",
-        vp: "",
-        budget: 1000,
-        remainingMinutes: 90 * 24 * 60,
-        strategy: "Solo",
-        alliancePartner: "None",
-        ticketsConfirmed: {}
+        name: "", state: "", constituency: "", ideology: "", party: "",
+        budget: 1000, remainingMinutes: 90 * 24 * 60, strategy: "Solo"
     };
 
     let gameTimer = null;
     let clockSpeed = 1000;
     let allConstituenciesData = [];
-    const itemsPerPage = 30;
-
-    const stateSeatCounts = [
-        { state: "Uttar Pradesh", count: 80 }, { state: "Maharashtra", count: 48 },
-        { state: "West Bengal", count: 42 }, { state: "Bihar", count: 40 },
-        { state: "Tamil Nadu", count: 39 }, { state: "Madhya Pradesh", count: 29 },
-        { state: "Karnataka", count: 28 }, { state: "Gujarat", count: 26 },
-        { state: "Rajasthan", count: 25 }, { state: "Andhra Pradesh", count: 25 },
-        { state: "Kerala", count: 20 }, { state: "Telangana", count: 17 },
-        { state: "Assam", count: 14 }, { state: "Punjab", count: 13 },
-        { state: "Chhattisgarh", count: 11 }, { state: "Haryana", count: 10 },
-        { state: "Delhi", count: 7 }, { state: "Uttarakhand", count: 5 },
-        { state: "Jammu and Kashmir", count: 5 }, { state: "Himachal Pradesh", count: 4 },
-        { state: "Arunachal Pradesh", count: 2 }, { state: "Goa", count: 2 },
-        { state: "Manipur", count: 2 }, { state: "Meghalaya", count: 2 },
-        { state: "Tripura", count: 2 }, { state: "Dadra and Nagar Haveli and Daman and Diu", count: 2 },
-        { state: "Andaman and Nicobar Islands", count: 1 }, { state: "Chandigarh", count: 1 },
-        { state: "Lakshadweep", count: 1 }, { state: "Ladakh", count: 1 },
-        { state: "Puducherry", count: 1 }, { state: "Mizoram", count: 1 },
-        { state: "Nagaland", count: 1 }, { state: "Sikkim", count: 1 }
-    ];
-
-    const firstNamesMale = ["Rajesh", "Amit", "Vijay", "Ramesh", "Suresh", "Manoj", "Anil", "Sunil", "Vikram", "Deepak", "Rahul"];
-    const firstNamesFemale = ["Kavita", "Pooja", "Sunita", "Anita", "Geeta", "Meena", "Priyanka", "Rekha"];
-    const lastNames = ["Pandey", "Sharma", "Verma", "Gupta", "Singh", "Yadav", "Mishra", "Rawat", "Bisht", "Tiwari"];
-
-    function initialize543Constituencies() {
-        if (allConstituenciesData.length === 543) return;
-        let totalGenerated = 0;
-        for (let sObj of stateSeatCounts) {
-            for (let i = 1; i <= sObj.count; i++) {
-                totalGenerated++;
-                let seatName = `${sObj.state} Seat ${i}`;
-                if (sObj.state === "Uttarakhand") {
-                    const ukNames = ["Tehri Garhwal", "Garhwal", "Almora", "Nainital-Udhamsingh Nagar", "Haridwar"];
-                    seatName = ukNames[i - 1];
-                }
-                let c1 = `${firstNamesMale[totalGenerated % firstNamesMale.length]} ${lastNames[totalGenerated % lastNames.length]}`;
-                let c2 = `${firstNamesFemale[totalGenerated % firstNamesFemale.length]} ${lastNames[(totalGenerated + 2) % lastNames.length]}`;
-                let c3 = `${firstNamesMale[(totalGenerated + 3) % firstNamesMale.length]} ${lastNames[(totalGenerated + 4) % lastNames.length]}`;
-
-                allConstituenciesData.push({
-                    id: totalGenerated, state: sObj.state, name: seatName, candidates: [c1, c2, c3]
-                });
-            }
-        }
-    }
-    initialize543Constituencies();
 
     function saveCharacter() {
-        const nameInput = document.getElementById('char-name');
-        const constituencyInput = document.getElementById('char-constituency');
-        if (!nameInput.value.trim() || !constituencyInput.value.trim()) {
-            alert('Please fill in your name and constituency!');
-            return;
-        }
-        playerData.name = nameInput.value.trim();
+        const nameInput = document.getElementById('char-name').value.trim();
+        const constituencyInput = document.getElementById('char-constituency').value.trim();
+        if (!nameInput || !constituencyInput) { alert('Fill name and constituency!'); return; }
+        playerData.name = nameInput;
         playerData.state = document.getElementById('char-state').value;
-        playerData.constituency = constituencyInput.value.trim();
+        playerData.constituency = constituencyInput;
         playerData.ideology = document.getElementById('char-ideology').value;
 
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
+        document.getElementById('screen-character').classList.remove('active-screen');
         document.getElementById('screen-party-hub').classList.add('active-screen');
     }
 
@@ -497,15 +339,13 @@
 
     function confirmExistingParty() {
         const selected = document.querySelector('input[name="party"]:checked');
-        playerData.partyType = "existing";
         playerData.party = selected ? selected.value : "Independent";
         loadDashboard();
     }
 
     function confirmCustomParty() {
-        const pName = document.getElementById('custom-party-name').value;
-        if(!pName.trim()) { alert('Enter party name!'); return; }
-        playerData.partyType = "custom";
+        const pName = document.getElementById('custom-party-name').value.trim();
+        if(!pName) { alert('Enter party name!'); return; }
         playerData.party = pName;
         loadDashboard();
     }
@@ -543,19 +383,9 @@
     }
 
     function setTimeSpeed(speedType) {
-        document.getElementById('btn-pause').classList.remove('active-speed');
-        document.getElementById('btn-normal').classList.remove('active-speed');
-        document.getElementById('btn-fast').classList.remove('active-speed');
-        if(speedType === 'pause') {
-            document.getElementById('btn-pause').classList.add('active-speed');
-            if(gameTimer) clearInterval(gameTimer);
-        } else if(speedType === 'normal') {
-            document.getElementById('btn-normal').classList.add('active-speed');
-            clockSpeed = 1000; startSimulationClock();
-        } else if(speedType === 'fast') {
-            document.getElementById('btn-fast').classList.add('active-speed');
-            clockSpeed = 200; startSimulationClock();
-        }
+        if(speedType === 'pause') { if(gameTimer) clearInterval(gameTimer); }
+        else if(speedType === 'normal') { clockSpeed = 1000; startSimulationClock(); }
+        else if(speedType === 'fast') { clockSpeed = 200; startSimulationClock(); }
     }
 
     function startCampaign() {
@@ -580,24 +410,22 @@
         playerData.strategy = (choice === 'solo') ? "Contesting Solo" : "Alliance Formation";
         document.getElementById('screen-alliance').classList.remove('active-screen');
         document.getElementById('screen-tickets').classList.add('active-screen');
+        generateConstituencies();
+    }
+
+    function generateConstituencies() {
+        if(allConstituenciesData.length > 0) return;
+        for(let i=1; i<=543; i++) {
+            allConstituenciesData.push({ id: i, state: i<=80 ? "Uttar Pradesh" : (i<=128 ? "Maharashtra" : "Uttarakhand"), name: `Seat ${i}`, cand: [`Candidate A`, `Candidate B`] });
+        }
         renderConstituencies("ALL");
     }
 
-    function renderConstituencies(stateFilter) {
-        const container = document.getElementById('constituency-container');
+    function renderConstituencies(filter) {
+        let container = document.getElementById('constituency-container');
         container.innerHTML = "";
-        let filtered = (stateFilter === "ALL") ? allConstituenciesData : allConstituenciesData.filter(c => c.state === stateFilter);
-        document.getElementById('seat-count-display').innerText = `Showing: ${filtered.length} Seats`;
-        filtered.slice(0, itemsPerPage).forEach((item) => {
-            let cId = `const_${item.id}`;
-            container.innerHTML += `
-                <div class="constituency-row">
-                    <h4>#${item.id} - ${item.name} (${item.state})</h4>
-                    <div class="candidates-group">
-                        <label><input type="radio" name="${cId}" value="${item.candidates[0]}" checked> ${item.candidates[0]}</label>
-                        <label><input type="radio" name="${cId}" value="${item.candidates[1]}"> ${item.candidates[1]}</label>
-                    </div>
-                </div>`;
+        allConstituenciesData.slice(0, 25).forEach(item => {
+            container.innerHTML += `<div style="background:#2a2a2a; padding:8px; margin-bottom:6px; border-radius:4px;">#${item.id} - ${item.name} (${item.state})</div>`;
         });
     }
 
@@ -609,9 +437,8 @@
         alert('Tickets confirmed! Entering Master Campaign Dashboard.');
         openMasterDashboard();
     }
-        <script>
-    // --- Master Campaign Dashboard Functions ---
-    let campaignStats = { popularity: 35, mediaHype: 20 };
+
+    let campaignStats = { popularity: 35 };
 
     function openMasterDashboard() {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
@@ -631,13 +458,7 @@
 
     function updateOpinionPoll() {
         let pollBox = document.getElementById('opinion-poll-text');
-        if(campaignStats.popularity > 60) {
-            pollBox.innerHTML = `🟢 <strong>Leading:</strong> Popularity is strong at ${campaignStats.popularity}%!`;
-        } else if(campaignStats.popularity > 40) {
-            pollBox.innerHTML = `🟡 <strong>Competitive:</strong> Popularity at ${campaignStats.popularity}%. Push more rallies!`;
-        } else {
-            pollBox.innerHTML = `🔴 <strong>Trailing:</strong> Popularity low (${campaignStats.popularity}%). Invest in ads & rallies!`;
-        }
+        pollBox.innerHTML = `🟢 <strong>Popularity:</strong> ${campaignStats.popularity}%`;
     }
 
     function logAction(msg) {
@@ -649,9 +470,9 @@
         let cost = parseInt(document.getElementById('rally-budget-input').value) || 50;
         if(playerData.budget < cost) { alert('Low budget!'); return; }
         playerData.budget -= cost;
-        campaignStats.popularity = Math.min(95, campaignStats.popularity + Math.floor(cost / 5));
+        campaignStats.popularity = Math.min(95, campaignStats.popularity + 5);
         document.getElementById('master-disp-budget').innerText = playerData.budget;
-        logAction(`Mega rally organized (Cost: ₹${cost} Cr). Popularity up!`);
+        logAction(`Mega rally organized (Cost: ₹${cost} Cr).`);
         updateOpinionPoll();
     }
 
@@ -659,51 +480,31 @@
         let cost = parseInt(document.getElementById('media-budget-input').value) || 30;
         if(playerData.budget < cost) { alert('Low budget!'); return; }
         playerData.budget -= cost;
-        campaignStats.popularity = Math.min(95, campaignStats.popularity + Math.floor(cost / 8));
+        campaignStats.popularity = Math.min(95, campaignStats.popularity + 4);
         document.getElementById('master-disp-budget').innerText = playerData.budget;
-        logAction(`Media campaign launched (Cost: ₹${cost} Cr).`);
+        logAction(`Media campaign launched.`);
         updateOpinionPoll();
     }
 
     function holdPressConference() {
-        let gain = Math.floor(Math.random() * 8) + 4;
-        campaignStats.popularity = Math.min(95, campaignStats.popularity + gain);
-        logAction(`Press conference held successfully (+${gain}% popularity).`);
+        campaignStats.popularity = Math.min(95, campaignStats.popularity + 5);
+        logAction(`Press conference held.`);
         updateOpinionPoll();
     }
 
     function conductGroundCampaign() {
         if(playerData.budget < 10) { alert('Requires ₹10 Crores!'); return; }
         playerData.budget -= 10;
-        campaignStats.popularity = Math.min(95, campaignStats.popularity + 4);
+        campaignStats.popularity = Math.min(95, campaignStats.popularity + 3);
         document.getElementById('master-disp-budget').innerText = playerData.budget;
         logAction(`Ground workers deployed.`);
         updateOpinionPoll();
     }
 
     function resumeSimulationClockFromDashboard() {
-        alert('Resuming simulation...');
         loadDashboard();
     }
-
-    // Timer Injector across screens
-    window.addEventListener('DOMContentLoaded', () => {
-        ['screen-character', 'screen-party-hub', 'screen-existing-parties', 'screen-create-party', 'screen-alliance', 'screen-tickets'].forEach(sId => {
-            let scr = document.getElementById(sId);
-            if(scr && !scr.querySelector('.global-timer-bar')) {
-                let tb = document.createElement('div');
-                tb.style.cssText = "background:#252525; padding:6px; margin-bottom:10px; border-radius:4px; font-size:12px;";
-                tb.innerHTML = `⏳ <strong>Simulation Active</strong>`;
-                scr.insertBefore(tb, scr.firstChild);
-            }
-        });
-    });
 </script>
-
-</body>
-</html>
-
+    </html>
     
-                                                     
-    
-        
+            
