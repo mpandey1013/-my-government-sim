@@ -180,7 +180,7 @@
         </div>
         <div class="form-group">
             <label>Constituency / Seat:</label>
-            <input type="text" id="char-constituency" placeholder="Constituency name">
+            <input type="text" id="char-constituency" placeholder="e.g. Almora or Varanasi">
         </div>
         <div class="form-group">
             <label>Political Ideology:</label>
@@ -426,21 +426,18 @@
 
     // Name pools including male and female names with regional touch
     const firstNamesMale = ["Rajesh", "Amit", "Vijay", "Ramesh", "Suresh", "Manoj", "Anil", "Sunil", "Alok", "Pankaj", "Vikram", "Deepak", "Sanjay", "Rahul", "Naveen", "Arun", "Kamesh", "Gopal", "Vinay", "Ashok", "Karan", "Sandeep", "Ajay", "Mohan", "Rakesh"];
-    const firstNamesFemale = ["Kavita", "Pooja", "Sunita", "Anita", "Geeta", "Meena", "Suman", "Kusum", "Rekha", "Priyanka", "Neelam", "Saroj", "Mamta", "Radha", "Pushpa", "Asha", "Shashi", "Vandana", "Deepika"
+    const firstNamesFemale = ["Kavita", "Pooja", "Sunita", "Anita", "Geeta", "Meena", "Suman", "Kusum", "Rekha", "Priyanka", "Neelam", "Saroj", "Mamta", "Radha", "Pushpa", "Asha", "Shashi", "Vandana", "Deepika", "Poonam"];
     const lastNames = ["Pandey", "Sharma", "Verma", "Gupta", "Singh", "Yadav", "Mishra", "Joshi", "Rawat", "Bisht", "Tiwari", "Dubey", "Chauhan", "Thakur", "Reddy", "Iyer", "Rao", "Nair", "Pillai", "Chatterjee", "Banerjee", "Mukherjee", "Sen", "Das", "Patel"];
 
-    // Function to generate precisely all 543 constituencies programmatically
     function initialize543Constituencies() {
-        if (allConstituenciesData.length === 543) return; // already initialized
+        if (allConstituenciesData.length === 543) return;
 
         let totalGenerated = 0;
-        stateSeatCountsforEachLoop:
         for (let sObj of stateSeatCounts) {
             for (let i = 1; i <= sObj.count; i++) {
                 totalGenerated++;
-                let seatName = `${sObj.state} Constituency ${i}`;
+                let seatName = `${sObj.state} Seat ${i}`;
                 
-                // Give specific recognizable names to major historical/known seats
                 if (sObj.state === "Uttarakhand") {
                     const ukNames = ["Tehri Garhwal", "Garhwal", "Almora", "Nainital-Udhamsingh Nagar", "Haridwar"];
                     seatName = ukNames[i - 1];
@@ -449,7 +446,6 @@
                     seatName = upNames[i - 1];
                 }
 
-                // Generate 3 unique candidate options (mixing male and female names)
                 let c1 = `${firstNamesMale[(totalGenerated * 3) % firstNamesMale.length]} ${lastNames[(totalGenerated * 5) % lastNames.length]}`;
                 let c2 = `${firstNamesFemale[(totalGenerated * 7) % firstNamesFemale.length]} ${lastNames[(totalGenerated * 11) % lastNames.length]}`;
                 let c3 = `${firstNamesMale[(totalGenerated * 13) % firstNamesMale.length]} ${lastNames[(totalGenerated * 17) % lastNames.length]}`;
@@ -464,18 +460,24 @@
         }
     }
 
-    // Run generation immediately
     initialize543Constituencies();
 
     function saveCharacter() {
         const name = document.getElementById('char-name').value;
+        const constituency = document.getElementById('char-constituency').value;
+
         if(!name.trim()) {
-            alert('Please enter your name!');
+            alert('Please enter your leader name!');
             return;
         }
+        if(!constituency.trim()) {
+            alert('Please enter your constituency name!');
+            return;
+        }
+
         playerData.name = name;
         playerData.state = document.getElementById('char-state').value;
-        playerData.constituency = document.getElementById('char-constituency').value || "General Constituency";
+        playerData.constituency = constituency;
         playerData.ideology = document.getElementById('char-ideology').value;
 
         document.getElementById('screen-character').classList.remove('active-screen');
@@ -617,7 +619,6 @@
             playerData.alliancePartner = selectedPartner ? selectedPartner.value : "Coalition Partner";
         }
 
-        // Move to Ticket Distribution Screen (Screen 6)
         document.getElementById('screen-alliance').classList.remove('active-screen');
         document.getElementById('screen-tickets').classList.add('active-screen');
         renderConstituencies("ALL");
@@ -659,8 +660,4 @@
         alert('All 543 constituency candidate tickets have been successfully confirmed! Entering full active election campaign phase.');
         loadDashboard();
     }
-</script>
-
-</body>
-</html>
-                              
+        
