@@ -658,7 +658,86 @@
         alert('All 543 constituency candidate tickets have been successfully confirmed! Entering full active election campaign phase.');
         loadDashboard();
     }
-</script>
+            <script>
+    // --- Performance Optimization Code to Eliminate Lag ---
+    let currentRenderPage = 1;
+    const itemsPerPage = 30; // Loads 30 constituencies at a time for smooth UI rendering
 
+    function renderConstituencies(stateFilter) {
+        const container = document.getElementById('constituency-container');
+        container.innerHTML = "";
+
+        let filtered = allConstituenciesData;
+        if(stateFilter !== "ALL") {
+            filtered = allConstituenciesData.filter(c => c.state === stateFilter);
+        }
+
+        document.getElementById('seat-count-display').innerText = `Showing Constituencies: ${filtered.length} (Total Available: ${allConstituenciesData.length})`;
+
+        let sliceData = filtered.slice(0, itemsPerPage);
+
+        sliceData.forEach((item) => {
+            let cId = `const_${item.id}`;
+            let rowHTML = `
+                <div class="constituency-row">
+                    <h4>#${item.id} - ${item.name} (${item.state})</h4>
+                    <div class="candidates-group">
+                        <label><input type="radio" name="${cId}" value="${item.candidates[0]}" checked> ${item.candidates[0]}</label>
+                        <label><input type="radio" name="${cId}" value="${item.candidates[1]}"> ${item.candidates[1]}</label>
+                        <label><input type="radio" name="${cId}" value="${item.candidates[2]}"> ${item.candidates[2]}</label>
+                    </div>
+                </div>
+            `;
+            container.innerHTML += rowHTML;
+        });
+
+        if(filtered.length > itemsPerPage) {
+            container.innerHTML += `<p style="text-align:center; color:#ff9800; padding:10px;">Showing top ${itemsPerPage} items for smooth performance. Use State Filter for specific regions.</p>`;
+        }
+    }
+
+    // --- Global Timer & Speed Control Integration across all Screens ---
+    function injectTimerToAllScreens() {
+        const screens = ['screen-character', 'screen-party-hub', 'screen-existing-parties', 'screen-create-party', 'screen-alliance', 'screen-tickets'];
+        
+        screens.forEach(screenId => {
+            let scr = document.getElementById(screenId);
+            if(scr && !scr.querySelector('.global-timer-bar')) {
+                let timerBar = document.createElement('div');
+                timerBar.className = 'global-timer-bar';
+                timerBar.style.cssText = "background: #252525; padding: 8px; margin-bottom: 15px; border-radius: 6px; border: 1px solid #444; display: flex; justify-content: space-between; align-items: center; font-size: 13px;";
+                timerBar.innerHTML = `
+                    <span>⏳ <strong>Time:</strong> <span id="global-days-${screenId}">90</span>D <span id="global-hrs-${screenId}">00</span>H</span>
+                    <div>
+                        <button onclick="setTimeSpeed('pause')" style="padding: 3px 8px; font-size: 11px; margin:0; width:auto;">Pause</button>
+                        <button onclick="setTimeSpeed('normal')" style="padding: 3px 8px; font-size: 11px; margin:0; width:auto; background:#00897b; color:#fff;">1x</button>
+                        <button onclick="setTimeSpeed('fast')" style="padding: 3px 8px; font-size: 11px; margin:0; width:auto;">5x</button>
+                    </div>
+                `;
+                scr.insertBefore(timerBar, scr.firstChild);
+            }
+        });
+    }
+
+    setInterval(() => {
+        let totalMins = playerData.remainingMinutes;
+        let days = Math.floor(totalMins / (24 * 60));
+        let hours = Math.floor((totalMins % (24 * 60)) / 60);
+        
+        let dDays = document.getElementById('game-days');
+        if(dDays) dDays.innerText = days;
+
+        ['screen-character', 'screen-party-hub', 'screen-existing-parties', 'screen-create-party', 'screen-alliance', 'screen-tickets'].forEach(sId => {
+            let dElem = document.getElementById(`global-days-${sId}`);
+            let hElem = document.getElementById(`global-hrs-${sId}`);
+            if(dElem) dElem.innerText = days;
+            if(hElem) hElem.innerText = String(hours).padStart(2, '0');
+        });
+    }, 1000);
+
+    window.addEventListener('DOMContentLoaded', () => {
+        injectTimerToAllScreens();
+    });
+</script>
 </body>
     </html>
