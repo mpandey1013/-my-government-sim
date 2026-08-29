@@ -703,8 +703,215 @@
     window.addEventListener('DOMContentLoaded', () => {
         injectTimerToAllScreens();
     });
+            // --- Master Campaign Dashboard Logic ---
+    let campaignStats = {
+        popularity: 35, // Percentage
+        winningChance: "Low",
+        mediaHype: 20
+    };
+
+    function openMasterDashboard() {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
+        document.getElementById('screen-master-dashboard').classList.add('active-screen');
+
+        document.getElementById('master-disp-name').innerText = playerData.name;
+        document.getElementById('master-disp-party').innerText = playerData.party;
+        document.getElementById('master-disp-budget').innerText = playerData.budget;
+        document.getElementById('master-disp-strategy').innerText = playerData.strategy;
+
+        updateOpinionPoll();
+    }
+
+    function switchTab(tabName) {
+        document.getElementById('tab-rallies').style.display = 'none';
+        document.getElementById('tab-media').style.display = 'none';
+        document.getElementById('tab-press').style.display = 'none';
+        document.getElementById('tab-ground').style.display = 'none';
+
+        if(tabName === 'rallies') document.getElementById('tab-rallies').style.display = 'block';
+        if(tabName === 'media') document.getElementById('tab-media').style.display = 'block';
+        if(tabName === 'press') document.getElementById('tab-press').style.display = 'block';
+        if(tabName === 'ground') document.getElementById('tab-ground').style.display = 'block';
+    }
+
+    function updateOpinionPoll() {
+        let pollBox = document.getElementById('opinion-poll-text');
+        if(campaignStats.popularity > 60) {
+            campaignStats.winningChance = "Very High (Leading)";
+            pollBox.innerHTML = `🟢 <strong>Strong Wave:</strong> Your party is currently leading with ${campaignStats.popularity}% projected vote share!`;
+        } else if(campaignStats.popularity > 40) {
+            campaignStats.winningChance = "Moderate (Competitive)";
+            pollBox.innerHTML = `🟡 <strong>Tight Race:</strong> Public sentiment is balanced. Popularity is at ${campaignStats.popularity}%. More rallies needed.`;
+        } else {
+            campaignStats.winningChance = "Weak (Trailing)";
+            pollBox.innerHTML = `🔴 <strong>Trailing behind:</strong> Popularity is low (${campaignStats.popularity}%). Increase ad budget and organize mega rallies immediately!`;
+        }
+    }
+
+    function logAction(msg) {
+        let logDiv = document.getElementById('campaign-log');
+        logDiv.innerHTML = `> ${msg}<br>` + logDiv.innerHTML;
+    }
+
+    function conductMegaRally() {
+        let cost = parseInt(document.getElementById('rally-budget-input').value) || 50;
+        let targetState = document.getElementById('rally-state').value;
+
+        if(playerData.budget < cost) {
+            alert('Insufficient budget for this mega rally!');
+            return;
+        }
+
+        playerData.budget -= cost;
+        campaignStats.popularity = Math.min(95, campaignStats.popularity + Math.floor(cost / 5));
+        
+        document.getElementById('master-disp-budget').innerText = playerData.budget;
+        logAction(`Mega rally organized in ${targetState} costing ₹${cost} Crores. Popularity increased!`);
+        updateOpinionPoll();
+    }
+
+    function investInMedia() {
+        let cost = parseInt(document.getElementById('media-budget-input').value) || 30;
+
+        if(playerData.budget < cost) {
+            alert('Insufficient budget for media campaign!');
+            return;
+        }
+
+        playerData.budget -= cost;
+        campaignStats.mediaHype += 15;
+        campaignStats.popularity = Math.min(95, campaignStats.popularity + Math.floor(cost / 8));
+
+        document.getElementById('master-disp-budget').innerText = playerData.budget;
+        logAction(`Media & Print campaign launched (Spent ₹${cost} Cr). Visibility boosted across channels.`);
+        updateOpinionPoll();
+    }
+
+    function holdPressConference() {
+        let stance = document.getElementById('press-stance').value;
+        let gain = 0;
+
+        if(stance === 'aggressive') {
+            gain = Math.floor(Math.random() * 10) + 5;
+            logAction(`Aggressive press meet held! Media headlines gained, popularity up by ${gain}%.`);
+        } else if(stance === 'development') {
+            gain = Math.floor(Math.random() * 6) + 3;
+            logAction(`Development-focused press meet held. Steady public trust gained (+${gain}%).`);
+        } else {
+            gain = Math.floor(Math.random() * 8) + 4;
+            logAction(`Regional/Emotional appeal broadcasted successfully (+${gain}%).`);
+        }
+
+        campaignStats.popularity = Math.min(95, campaignStats.popularity + gain);
+        updateOpinionPoll();
+    }
+
+    function conductGroundCampaign() {
+        if(playerData.budget < 10) {
+            alert('At least ₹10 Crores required for ground deployment!');
+            return;
+        }
+
+        playerData.budget -= 10;
+        campaignStats.popularity = Math.min(95, campaignStats.popularity + 4);
+
+        document.getElementById('master-disp-budget').innerText = playerData.budget;
+        logAction(`Ground workers deployed successfully. Grassroots connect strengthened.`);
+        updateOpinionPoll();
+    }
+
+    function resumeSimulationClockFromDashboard() {
+        alert('Returning to simulation timeline. Watch your clock and strategy outcomes!');
+openMasterDashboard(); // वापस टाइमर वाले डैशबोर्ड पर ले जाएगा
+    }
+    
 </script>
 
+        <!-- SCREEN 7: Master Campaign Dashboard -->
+    <div id="screen-master-dashboard" class="screen">
+        <h2>Master Election Campaign Dashboard</h2>
+        
+        <div class="dashboard-card" style="border-left-color: #00897b;">
+            <p><strong>Leader:</strong> <span id="master-disp-name"></span> | <strong>Party:</strong> <span id="master-disp-party"></span></p>
+            <p><strong>Remaining Budget:</strong> ₹<span id="master-disp-budget">1000</span> Crores | <strong>Current Strategy:</strong> <span id="master-disp-strategy">Solo</span></p>
+        </div>
+
+        <!-- Intelligence Report / Secret Opinion Poll Box -->
+        <div class="dashboard-card" style="background: #1a237e; border-left-color: #3f51b5;">
+            <h4 style="margin: 0 0 5px 0; color: #ffeb3b;">📊 Secret Intelligence Report & Opinion Poll</h4>
+            <p id="opinion-poll-text" style="font-size: 13px; margin: 0; color: #e8eaf6;">Analyzing ground reality... Invest in campaigns and media to see updated projections.</p>
+        </div>
+
+        <!-- Master Dashboard Navigation Tabs -->
+        <div style="display: flex; gap: 5px; margin-bottom: 15px; flex-wrap: wrap;">
+            <button onclick="switchTab('rallies')" style="flex: 1; margin:0; padding:8px; font-size:13px; background:#37474f;">Rallies</button>
+            <button onclick="switchTab('media')" style="flex: 1; margin:0; padding:8px; font-size:13px; background:#37474f;">Media & Ads</button>
+            <button onclick="switchTab('press')" style="flex: 1; margin:0; padding:8px; font-size:13px; background:#37474f;">Press Meet</button>
+            <button onclick="switchTab('ground')" style="flex: 1; margin:0; padding:8px; font-size:13px; background:#37474f;">Door-to-Door</button>
+        </div>
+
+        <!-- TAB 1: Rallies Management -->
+        <div id="tab-rallies" class="campaign-tab-content" style="background: #252525; padding: 12px; border-radius: 6px; margin-bottom: 15px;">
+            <h4 style="color: #ff9800; margin-top:0;">Megarally & Public Gatherings</h4>
+            <div class="form-group">
+                <label>Target Region / State:</label>
+                <select id="rally-state">
+                    <option value="Uttarakhand">Uttarakhand</option>
+                    <option value="Uttar Pradesh">Uttar Pradesh</option>
+                    <option value="Maharashtra">Maharashtra</option>
+                    <option value="Bihar">Bihar</option>
+                    <option value="Delhi">Delhi</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Allocate Rally Budget (₹ Crores):</label>
+                <input type="number" id="rally-budget-input" value="50" min="10" max="500">
+            </div>
+            <button onclick="conductMegaRally()" style="background: #ff9800; color: #121212;">Organize Mega Rally & Boost Popularity</button>
+        </div>
+
+        <!-- TAB 2: Media & Print Ads -->
+        <div id="tab-media" class="campaign-tab-content" style="display: none; background: #252525; padding: 12px; border-radius: 6px; margin-bottom: 15px;">
+            <h4 style="color: #ff9800; margin-top:0;">Print Media & Social Ads Management</h4>
+            <p style="font-size: 13px; color: #b0bec5;">Invest in newspapers and television advertisements to increase your brand visibility.</p>
+            <div class="form-group">
+                <label>Ad Campaign Budget (₹ Crores):</label>
+                <input type="number" id="media-budget-input" value="30" min="5" max="300">
+            </div>
+            <button onclick="investInMedia()" style="background: #0288d1; color: white;">Launch Media Campaign</button>
+        </div>
+
+        <!-- TAB 3: Press Conference -->
+        <div id="tab-press" class="campaign-tab-content" style="display: none; background: #252525; padding: 12px; border-radius: 6px; margin-bottom: 15px;">
+            <h4 style="color: #ff9800; margin-top:0;">Live Press Conference</h4>
+            <p style="font-size: 13px; color: #b0bec5;">Address the media on national issues to shape public narrative.</p>
+            <div class="form-group">
+                <label>Select Stand / Stance:</label>
+                <select id="press-stance">
+                    <option value="aggressive">Aggressive Attack on Opponents (High Risk / High Gain)</option>
+                    <option value="development">Focus on Development & Jobs (Balanced & Safe)</option>
+                    <option value="emotional">Emotional / Regional Appeal (Strong Local Connect)</option>
+                </select>
+            </div>
+            <button onclick="holdPressConference()" style="background: #e91e63; color: white;">Hold Press Conference</button>
+        </div>
+
+        <!-- TAB 4: Door-to-Door Ground Campaign -->
+        <div id="tab-ground" class="campaign-tab-content" style="display: none; background: #252525; padding: 12px; border-radius: 6px; margin-bottom: 15px;">
+            <h4 style="color: #ff9800; margin-top:0;">Ground & Door-to-Door Campaign</h4>
+            <p style="font-size: 13px; color: #b0bec5;">Deploy ground workers to secure grassroots connection in your constituency.</p>
+            <button onclick="conductGroundCampaign()" style="background: #4caf50; color: white;">Deploy Ground Workers (Cost: ₹10 Cr)</button>
+        </div>
+
+        <!-- Simulation Progress & Log Box -->
+        <div class="dashboard-card" style="background: #1e1e1e; max-height: 120px; overflow-y: auto;">
+            <h4 style="margin: 0 0 5px 0; color: #b0bec5; font-size: 13px;">Campaign Activity Log:</h4>
+            <div id="campaign-log" style="font-size: 12px; color: #81c784;">Dashboard initialized. Plan your moves carefully!</div>
+        </div>
+
+        <button onclick="resumeSimulationClockFromDashboard()" style="background: #607d8b; color: white;">Resume Time & Monitor Results</button>
+                </div>
+                
 </body>
     </html>
 
