@@ -416,7 +416,48 @@
         document.getElementById('disp-support').innerText = gameStats.support;
         saveGameState();
     }
+    function confirmExistingParty() {
+        const selectedPartyRadio = document.querySelector('input[name="party"]:checked');
+        playerData.partyType = "existing";
+        playerData.party = selectedPartyRadio ? selectedPartyRadio.value : "Independent";
+        loadDashboard();
+    }
+
+    function confirmCustomParty() {
+        const pName = document.getElementById('custom-party-name').value;
+        const pLogo = document.getElementById('custom-party-logo').value;
+        const pPres = document.getElementById('custom-party-president').value;
+        const pVp = document.getElementById('custom-party-vp').value;
+
+        if(!pName.trim()) {
+            alert('Please enter your party name!');
+            return;
+        }
+
+        playerData.partyType = "custom";
+        playerData.party = `${pName} (${pLogo ? pLogo : 'Custom Symbol'})`;
+        playerData.president = pPres.trim() ? pPres : playerData.name;
+        playerData.vp = pVp.trim() ? pVp : "Not Assigned";
+        loadDashboard();
+    }
+
+    function loadDashboard() {
+        document.getElementById('screen-character').classList.remove('active-screen');
+        document.getElementById('screen-party-hub').classList.remove('active-screen');
+        document.getElementById('screen-existing-parties').classList.remove('active-screen');
+        document.getElementById('screen-create-party').classList.remove('active-screen');
+        document.getElementById('screen-dashboard').classList.add('active-screen');
+
+        document.getElementById('disp-name').innerText = playerData.name || "";
+        document.getElementById('disp-party').innerText = playerData.party || "";
+        document.getElementById('disp-constituency').innerText = playerData.constituency || "";
+        document.getElementById('disp-state').innerText = playerData.state || "";
+        document.getElementById('disp-ideology').innerText = playerData.ideology || "";
+
+        startRealTimeClock();
+    }
 </script>
+    
 
 </body>
                 </html>
