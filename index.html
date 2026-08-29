@@ -25,12 +25,14 @@
         }
         .container {
             width: 100%;
-            max-width: 600px;
+            max-width: 500px;
             background: var(--card-bg);
             padding: 20px;
             box-sizing: border-box;
             border-radius: 8px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            max-height: 90vh;
+            overflow-y: auto;
         }
         h1 {
             text-align: center;
@@ -53,7 +55,7 @@
             font-weight: bold;
             font-size: 14px;
         }
-        input, select {
+        input[type="text"], input[type="number"], select {
             width: 100%;
             padding: 10px;
             background: #2d2d2d;
@@ -61,6 +63,32 @@
             color: #fff;
             border-radius: 4px;
             box-sizing: border-box;
+        }
+        .party-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 15px;
+            padding-right: 5px;
+        }
+        .party-card {
+            background: #2d2d2d;
+            border: 1px solid #444;
+            padding: 12px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: 0.2s;
+        }
+        .party-card:hover {
+            border-color: var(--primary-color);
+        }
+        .party-card input {
+            accent-color: var(--primary-color);
         }
         button {
             width: 100%;
@@ -77,22 +105,33 @@
         button:hover {
             background: #e68a2e;
         }
-        #dashboard {
+        .secondary-btn {
+            background: #444;
+            margin-top: 5px;
+        }
+        .secondary-btn:hover {
+            background: #555;
+        }
+        .screen {
             display: none;
+        }
+        .active-screen {
+            display: block;
         }
         .stat-box {
             background: #2d2d2d;
-            padding: 10px;
+            padding: 15px;
             border-radius: 4px;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+            line-height: 1.6;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <!-- Character Creation Screen (Section 3) -->
-    <div id="creation-screen">
+    <!-- Screen 1: Character Creation (Section 3) -->
+    <div id="screen-character" class="screen active-screen">
         <h1>Political Simulator 2D</h1>
         <div class="subtitle">Character Creation (Political Career Start)</div>
         
@@ -136,13 +175,51 @@
             <input type="text" id="char-constituency" value="Almora">
         </div>
 
-        <button onclick="startCareer()">Begin Political Career</button>
+        <button onclick="goToPartyChoice()">Begin Political Career</button>
     </div>
 
-    <!-- Main Dashboard Screen -->
-    <div id="dashboard">
+    <!-- Screen 2: Party Choice Hub (Join Existing vs Create New) -->
+    <div id="screen-party-hub" class="screen">
+        <h1>Political Party</h1>
+        <div class="subtitle">Section 4 - Choose Your Path</div>
+        
+        <div class="stat-box" style="text-align: center;">
+            <p>Welcome, <span id="hub-name" style="color: var(--primary-color); font-weight: bold;"></span>!</p>
+            <p style="font-size: 13px; color: #aaa; margin: 0;">How would you like to proceed with your political journey?</p>
+        </div>
+
+        <button onclick="showExistingParties()">Join Existing Political Party</button>
+        <button class="secondary-btn" onclick="alert('Create Your Own Party feature will be set up next!')">Create Your Own Party</button>
+    </div>
+
+    <!-- Screen 3: Existing Parties List (Sub-Stage 1 with Symbols) -->
+    <div id="screen-existing-parties" class="screen">
+        <h1>Existing Parties</h1>
+        <div class="subtitle">Select a Party to Join</div>
+
+        <div class="party-list">
+            <label class="party-card"><input type="radio" name="party" value="BJP (Lotus)" checked> <span>Bharatiya Janata Party (BJP)</span> <strong>🪷 Lotus</strong></label>
+            <label class="party-card"><input type="radio" name="party" value="INC (Hand)"> <span>Indian National Congress (INC)</span> <strong>✋ Hand</strong></label>
+            <label class="party-card"><input type="radio" name="party" value="AAP (Broom)"> <span>Aam Aadmi Party (AAP)</span> <strong>🧹 Broom</strong></label>
+            <label class="party-card"><input type="radio" name="party" value="AITC (Flowers & Grass)"> <span>All India Trinamool Congress (AITC)</span> <strong>🌿 Flowers & Grass</strong></label>
+            <label class="party-card"><input type="radio" name="party" value="CPIM (Hammer & Sickle)"> <span>Communist Party of India (Marxist) - CPI(M)</span> <strong>☭ Hammer & Sickle</strong></label>
+            <label class="party-card"><input type="radio" name="party" value="BSP (Elephant)"> <span>Bahujan Samaj Party (BSP)</span> <strong>🐘 Elephant</strong></label>
+            <label class="party-card"><input type="radio" name="party" value="JDS (Farmer carrying paddy corn)"> <span>Janata Dal (Secular) - JDS</span> <strong>🌾 Farmer with Paddy</strong></label>
+            <label class="party-card"><input type="radio" name="party" value="RJD (Hurricane Lantern)"> <span>Rashtriya Janata Dal (RJD)</span> <strong>🏮 Hurricane Lantern</strong></label>
+            <label class="party-card"><input type="radio" name="party" value="SP (Bicycle)"> <span>Samajwadi Party (SP)</span> <strong>🚲 Bicycle</strong></label>
+            <label class="party-card"><input type="radio" name="party" value="DMK (Rising Sun)"> <span>Dravida Munnetra Kazhagam (DMK)</span> <strong>🌅 Rising Sun</strong></label>
+            <label class="party-card"><input type="radio" name="party" value="SS (Bow & Arrow)"> <span>Shiv Sena (SS)</span> <strong>🏹 Bow & Arrow</strong></label>
+            <label class="party-card"><input type="radio" name="party" value="NCP (Clock)"> <span>Nationalist Congress Party (NCP)</span> <strong>⏰ Clock</strong></label>
+        </div>
+
+        <button onclick="confirmJoinParty()">Confirm & Proceed to Dashboard</button>
+        <button class="secondary-btn" onclick="backToPartyHub()">Back</button>
+    </div>
+
+    <!-- Screen 4: Main Dashboard -->
+    <div id="screen-dashboard" class="screen">
         <h1>Dashboard</h1>
-        <div class="subtitle" id="dash-subtitle">Political Career Active</div>
+        <div class="subtitle">Political Career Active</div>
         
         <div class="stat-box">
             <strong>Name:</strong> <span id="disp-name"></span><br>
@@ -153,17 +230,17 @@
 
         <div class="stat-box">
             <strong>Political Reputation:</strong> <span id="disp-rep">50</span> / 100<br>
-            <strong>Party Status:</strong> <span id="disp-party">Independent</span>
+            <strong>Political Party:</strong> <span id="disp-party"></span>
         </div>
 
-        <button onclick="alert('Next Step: Political Party selection and 543 constituencies database will be added!')">Next Step</button>
+        <button onclick="alert('Next: 543 Constituencies Deep Data & Campaigns!')">Next Step</button>
     </div>
 </div>
 
 <script>
     let playerData = {};
 
-    function goToPartySelection() {
+    function goToPartyChoice() {
         const name = document.getElementById('char-name').value;
         if(!name.trim()) {
             alert('Please enter your leader name!');
@@ -177,12 +254,25 @@
         playerData.state = document.getElementById('char-state').value;
         playerData.constituency = document.getElementById('char-constituency').value;
 
-        // Switch from Character Screen to Party Selection Screen
+        // Display name on hub
+        document.getElementById('hub-name').innerText = playerData.name;
+
+        // Switch screens cleanly
         document.getElementById('screen-character').classList.remove('active-screen');
-        document.getElementById('screen-parties').classList.add('active-screen');
+        document.getElementById('screen-party-hub').classList.add('active-screen');
     }
 
-    function joinParty() {
+    function showExistingParties() {
+        document.getElementById('screen-party-hub').classList.remove('active-screen');
+        document.getElementById('screen-existing-parties').classList.add('active-screen');
+    }
+
+    function backToPartyHub() {
+        document.getElementById('screen-existing-parties').classList.remove('active-screen');
+        document.getElementById('screen-party-hub').classList.add('active-screen');
+    }
+
+    function confirmJoinParty() {
         const selectedPartyRadio = document.querySelector('input[name="party"]:checked');
         if(selectedPartyRadio) {
             playerData.party = selectedPartyRadio.value;
@@ -190,7 +280,7 @@
             playerData.party = "Independent";
         }
 
-        // Populate Dashboard with selected data
+        // Populate Dashboard
         document.getElementById('disp-name').innerText = playerData.name;
         document.getElementById('disp-age').innerText = playerData.age;
         document.getElementById('disp-ideology').innerText = playerData.ideology;
@@ -198,37 +288,12 @@
         document.getElementById('disp-state').innerText = playerData.state;
         document.getElementById('disp-party').innerText = playerData.party;
 
-        // Switch from Party Selection Screen to Dashboard
-        document.getElementById('screen-parties').classList.remove('active-screen');
+        // Switch to Dashboard
+        document.getElementById('screen-existing-parties').classList.remove('active-screen');
         document.getElementById('screen-dashboard').classList.add('active-screen');
     }
 </script>
-    
-        docume
 
 </body>
-              </html>
-    <!-- Screen 2: Political Parties Sub-Stage 1 (Existing Parties List with Symbols) -->
-    <div id="screen-parties" class="screen">
-        <h1>Political Parties</h1>
-        <div class="subtitle">Section 4 - Sub-Stage 1: Join Existing Party</div>
-
-        <label>Select Existing Political Party:</label>
-        <div class="party-list">
-            <label class="party-card"><input type="radio" name="party" value="BJP (Lotus)" checked> <span>Bharatiya Janata Party (BJP)</span> <strong>🪷 Lotus</strong></label>
-            <label class="party-card"><input type="radio" name="party" value="INC (Hand)"> <span>Indian National Congress (INC)</span> <strong>✋ Hand</strong></label>
-            <label class="party-card"><input type="radio" name="party" value="AAP (Broom)"> <span>Aam Aadmi Party (AAP)</span> <strong>🧹 Broom</strong></label>
-            <label class="party-card"><input type="radio" name="party" value="AITC (Flowers & Grass)"> <span>All India Trinamool Congress (AITC)</span> <strong>🌿 Flowers & Grass</strong></label>
-            <label class="party-card"><input type="radio" name="party" value="CPIM (Hammer & Sickle)"> <span>Communist Party of India (Marxist) - CPI(M)</span> <strong>☭ Hammer & Sickle</strong></label>
-            <label class="party-card"><input type="radio" name="party" value="BSP (Elephant)"> <span>Bahujan Samaj Party (BSP)</span> <strong>🐘 Elephant</strong></label>
-            <label class="party-card"><input type="radio" name="party" value="JDS (Farmer carrying paddy corn)"> <span>Janata Dal (Secular) - JDS</span> <strong>🌾 Farmer with Paddy</strong></label>
-            <label class="party-card"><input type="radio" name="party" value="RJD (Hurricane Lantern)"> <span>Rashtriya Janata Dal (RJD)</span> <strong>🏮 Hurricane Lantern</strong></label>
-            <label class="party-card"><input type="radio" name="party" value="SP (Bicycle)"> <span>Samajwadi Party (SP)</span> <strong>🚲 Bicycle</strong></label>
-            <label class="party-card"><input type="radio" name="party" value="DMK (Rising Sun)"> <span>Dravida Munnetra Kazhagam (DMK)</span> <strong>🌅 Rising Sun</strong></label>
-            <label class="party-card"><input type="radio" name="party" value="SS (Bow & Arrow)"> <strong>Shiv Sena (SS)</strong> <strong>🏹 Bow & Arrow</strong></label>
-            <label class="party-card"><input type="radio" name="party" value="NCP (Clock)"> <span>Nationalist Congress Party (NCP)</span> <strong>⏰ Clock</strong></label>
-        </div>
-
-        <button onclick="joinParty()">Join Selected Party & Proceed</button>
-        </div>
-
+    </html>
+            
