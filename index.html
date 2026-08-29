@@ -738,6 +738,37 @@
     window.addEventListener('DOMContentLoaded', () => {
         injectTimerToAllScreens();
     });
+                // --- Updated saveCharacter function to fix the Next Step button issue ---
+    function saveCharacter() {
+        const nameInput = document.getElementById('char-name');
+        const constituencyInput = document.getElementById('char-constituency');
+        const stateSelect = document.getElementById('char-state');
+        const ideologySelect = document.getElementById('char-ideology');
+
+        if (!nameInput || !nameInput.value.trim()) {
+            alert('Please enter your leader name!');
+            return;
+        }
+        if (!constituencyInput || !constituencyInput.value.trim()) {
+            alert('Please enter your constituency name!');
+            return;
+        }
+
+        playerData.name = nameInput.value.trim();
+        playerData.state = stateSelect ? stateSelect.value : "Uttarakhand";
+        playerData.constituency = constituencyInput.value.trim();
+        playerData.ideology = ideologySelect ? ideologySelect.value : "Nationalism";
+
+        // Removing active-screen from all screens and opening Party Hub smoothly
+        const screens = document.querySelectorAll('.screen');
+        screens.forEach(scr => scr.classList.remove('active-screen'));
+
+        const partyHub = document.getElementById('screen-party-hub');
+        if (partyHub) {
+            partyHub.classList.add('active-screen');
+        }
+            }
+            
 </script>
 </body>
     </html>
