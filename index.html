@@ -161,23 +161,50 @@
 </div>
 
 <script>
-    function startCareer() {
+    let playerData = {};
+
+    function goToPartySelection() {
         const name = document.getElementById('char-name').value;
         if(!name.trim()) {
             alert('Please enter your leader name!');
             return;
         }
         
-        document.getElementById('disp-name').innerText = name;
-        document.getElementById('disp-age').innerText = document.getElementById('char-age').value;
-        document.getElementById('disp-ideology').innerText = document.getElementById('char-ideology').value;
-        document.getElementById('disp-constituency').innerText = document.getElementById('char-constituency').value;
-        document.getElementById('disp-state').innerText = document.getElementById('char-state').value;
+        playerData.name = name;
+        playerData.age = document.getElementById('char-age').value;
+        playerData.gender = document.getElementById('char-gender').value;
+        playerData.ideology = document.getElementById('char-ideology').value;
+        playerData.state = document.getElementById('char-state').value;
+        playerData.constituency = document.getElementById('char-constituency').value;
 
-        document.getElementById('creation-screen').style.display = 'none';
-        document.getElementById('dashboard').style.display = 'block';
+        // Switch from Character Screen to Party Selection Screen
+        document.getElementById('screen-character').classList.remove('active-screen');
+        document.getElementById('screen-parties').classList.add('active-screen');
+    }
+
+    function joinParty() {
+        const selectedPartyRadio = document.querySelector('input[name="party"]:checked');
+        if(selectedPartyRadio) {
+            playerData.party = selectedPartyRadio.value;
+        } else {
+            playerData.party = "Independent";
+        }
+
+        // Populate Dashboard with selected data
+        document.getElementById('disp-name').innerText = playerData.name;
+        document.getElementById('disp-age').innerText = playerData.age;
+        document.getElementById('disp-ideology').innerText = playerData.ideology;
+        document.getElementById('disp-constituency').innerText = playerData.constituency;
+        document.getElementById('disp-state').innerText = playerData.state;
+        document.getElementById('disp-party').innerText = playerData.party;
+
+        // Switch from Party Selection Screen to Dashboard
+        document.getElementById('screen-parties').classList.remove('active-screen');
+        document.getElementById('screen-dashboard').classList.add('active-screen');
     }
 </script>
+    
+        docume
 
 </body>
               </html>
