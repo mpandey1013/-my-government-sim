@@ -154,6 +154,7 @@
     </style>
 </head>
 <body>
+
     <div class="game-container">
 
     <!-- SCREEN 1: Character Creation -->
@@ -266,7 +267,7 @@
         <button onclick="startCampaign()" style="background: #e91e63; color: white;">Start Campaign Now</button>
     </div>
 
-    <!-- SCREEN 5: Alliance & Model Code of Conduct Hub -->
+            <!-- SCREEN 5: Alliance & Model Code of Conduct Hub -->
     <div id="screen-alliance" class="screen">
         <h2>Election Commission: Model Code of Conduct</h2>
         <div class="mcc-banner">
@@ -353,14 +354,14 @@
         </div>
 
         <div class="constituency-list-container" id="constituency-container">
-            <!-- Dynamic 543 Constituencies populated via JavaScript -->
+            <!-- Dynamic Constituencies populated via JavaScript -->
         </div>
 
         <button onclick="confirmAllTickets()" style="background: #4caf50; color: white;">Confirm Ticket Distribution & Start Campaign</button>
     </div>
 
-        </div>
-        <script>
+                </div>
+    <script>
     let playerData = {
         name: "",
         state: "",
@@ -380,6 +381,7 @@
     let gameTimer = null;
     let clockSpeed = 1000;
     let allConstituenciesData = [];
+    const itemsPerPage = 30; // Lagging fix: Renders 30 seats at a time
 
     const stateSeatCounts = [
         { state: "Uttar Pradesh", count: 80 },
@@ -455,6 +457,7 @@
 
     initialize543Constituencies();
 
+    // Fixed Character Save Function
     function saveCharacter() {
         const nameInput = document.getElementById('char-name');
         const constituencyInput = document.getElementById('char-constituency');
@@ -475,11 +478,9 @@
         playerData.constituency = constituencyInput.value.trim();
         playerData.ideology = ideologySelect ? ideologySelect.value : "Nationalism";
 
-        const screenChar = document.getElementById('screen-character');
-        const screenPartyHub = document.getElementById('screen-party-hub');
-
-        if (screenChar) screenChar.classList.remove('active-screen');
-        if (screenPartyHub) screenPartyHub.classList.add('active-screen');
+        document.querySelectorAll('.screen').forEach(scr => scr.classList.remove('active-screen'));
+        const partyHub = document.getElementById('screen-party-hub');
+        if (partyHub) partyHub.classList.add('active-screen');
     }
 
     function goToExistingParties() {
@@ -518,13 +519,7 @@
     }
 
     function loadDashboard() {
-        document.getElementById('screen-character').classList.remove('active-screen');
-        document.getElementById('screen-party-hub').classList.remove('active-screen');
-        document.getElementById('screen-existing-parties').classList.remove('active-screen');
-        document.getElementById('screen-create-party').classList.remove('active-screen');
-        document.getElementById('screen-alliance').classList.remove('active-screen');
-        document.getElementById('screen-tickets').classList.remove('active-screen');
-        
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
         document.getElementById('screen-dashboard').classList.add('active-screen');
 
         document.getElementById('disp-name').innerText = playerData.name;
@@ -543,9 +538,13 @@
         let hours = Math.floor((totalMins % (24 * 60)) / 60);
         let mins = totalMins % 60;
 
-        document.getElementById('game-days').innerText = days;
-        document.getElementById('game-hours').innerText = String(hours).padStart(2, '0');
-        document.getElementById('game-minutes').innerText = String(mins).padStart(2, '0');
+        let dElem = document.getElementById('game-days');
+        let hElem = document.getElementById('game-hours');
+        let mElem = document.getElementById('game-minutes');
+
+        if(dElem) dElem.innerText = days;
+        if(hElem) hElem.innerText = String(hours).padStart(2, '0');
+        if(mElem) mElem.innerText = String(mins).padStart(2, '0');
     }
 
     function startSimulationClock() {
@@ -591,9 +590,7 @@
     function goBackToDashboard() {
         document.getElementById('screen-alliance').classList.remove('active-screen');
         document.getElementById('screen-dashboard').classList.add('active-screen');
-        if(!gameTimer && document.getElementById('btn-pause').classList.contains('active-speed') === false) {
-            startSimulationClock();
-        }
+        startSimulationClock();
     }
 
     function toggleAllianceList() {
@@ -622,47 +619,7 @@
         renderConstituencies("ALL");
     }
 
-    function renderConstituencies(stateFilter) {
-        const container = document.getElementById('constituency-container');
-        container.innerHTML = "";
-
-        let filtered = allConstituenciesData;
-        if(stateFilter !== "ALL") {
-            filtered = allConstituenciesData.filter(c => c.state === stateFilter);
-        }
-
-        document.getElementById('seat-count-display').innerText = `Showing Constituencies: ${filtered.length} (Total Available: ${allConstituenciesData.length})`;
-
-        filtered.forEach((item) => {
-            let cId = `const_${item.id}`;
-            let rowHTML = `
-                <div class="constituency-row">
-                    <h4>#${item.id} - ${item.name} (${item.state})</h4>
-                    <div class="candidates-group">
-                        <label><input type="radio" name="${cId}" value="${item.candidates[0]}" checked> ${item.candidates[0]}</label>
-                        <label><input type="radio" name="${cId}" value="${item.candidates[1]}"> ${item.candidates[1]}</label>
-                        <label><input type="radio" name="${cId}" value="${item.candidates[2]}"> ${item.candidates[2]}</label>
-                    </div>
-                </div>
-            `;
-            container.innerHTML += rowHTML;
-        });
-    }
-
-    function filterConstituencies() {
-        const selectedState = document.getElementById('ticket-state-filter').value;
-        renderConstituencies(selectedState);
-    }
-
-    function confirmAllTickets() {
-        alert('All 543 constituency candidate tickets have been successfully confirmed! Entering full active election campaign phase.');
-        loadDashboard();
-    }
-            <script>
-    // --- Performance Optimization Code to Eliminate Lag ---
-    let currentRenderPage = 1;
-    const itemsPerPage = 30; // Loads 30 constituencies at a time for smooth UI rendering
-
+    // Smooth optimized renderer to eliminate lag
     function renderConstituencies(stateFilter) {
         const container = document.getElementById('constituency-container');
         container.innerHTML = "";
@@ -696,7 +653,17 @@
         }
     }
 
-    // --- Global Timer & Speed Control Integration across all Screens ---
+    function filterConstituencies() {
+        const selectedState = document.getElementById('ticket-state-filter').value;
+        renderConstituencies(selectedState);
+    }
+
+    function confirmAllTickets() {
+        alert('All 543 constituency candidate tickets have been successfully confirmed! Entering full active election campaign phase.');
+        loadDashboard();
+    }
+
+    // Injecting timer bar into all screens dynamically
     function injectTimerToAllScreens() {
         const screens = ['screen-character', 'screen-party-hub', 'screen-existing-parties', 'screen-create-party', 'screen-alliance', 'screen-tickets'];
         
@@ -719,14 +686,12 @@
         });
     }
 
+    // Syncing global timers across all active screens
     setInterval(() => {
         let totalMins = playerData.remainingMinutes;
         let days = Math.floor(totalMins / (24 * 60));
         let hours = Math.floor((totalMins % (24 * 60)) / 60);
         
-        let dDays = document.getElementById('game-days');
-        if(dDays) dDays.innerText = days;
-
         ['screen-character', 'screen-party-hub', 'screen-existing-parties', 'screen-create-party', 'screen-alliance', 'screen-tickets'].forEach(sId => {
             let dElem = document.getElementById(`global-days-${sId}`);
             let hElem = document.getElementById(`global-hrs-${sId}`);
@@ -738,37 +703,9 @@
     window.addEventListener('DOMContentLoaded', () => {
         injectTimerToAllScreens();
     });
-                // --- Updated saveCharacter function to fix the Next Step button issue ---
-    function saveCharacter() {
-        const nameInput = document.getElementById('char-name');
-        const constituencyInput = document.getElementById('char-constituency');
-        const stateSelect = document.getElementById('char-state');
-        const ideologySelect = document.getElementById('char-ideology');
-
-        if (!nameInput || !nameInput.value.trim()) {
-            alert('Please enter your leader name!');
-            return;
-        }
-        if (!constituencyInput || !constituencyInput.value.trim()) {
-            alert('Please enter your constituency name!');
-            return;
-        }
-
-        playerData.name = nameInput.value.trim();
-        playerData.state = stateSelect ? stateSelect.value : "Uttarakhand";
-        playerData.constituency = constituencyInput.value.trim();
-        playerData.ideology = ideologySelect ? ideologySelect.value : "Nationalism";
-
-        // Removing active-screen from all screens and opening Party Hub smoothly
-        const screens = document.querySelectorAll('.screen');
-        screens.forEach(scr => scr.classList.remove('active-screen'));
-
-        const partyHub = document.getElementById('screen-party-hub');
-        if (partyHub) {
-            partyHub.classList.add('active-screen');
-        }
-            }
-            
 </script>
+
 </body>
     </html>
+
+                                                     
