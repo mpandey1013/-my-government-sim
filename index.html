@@ -99,7 +99,7 @@
         }
         .timer-box {
             text-align: center;
-            font-size: 24px;
+            font-size: 22px;
             font-weight: bold;
             color: #e91e63;
             margin: 15px 0;
@@ -221,7 +221,7 @@
             <p><strong>Total Budget:</strong> ₹<span id="disp-budget">1000</span> Crores</p>
         </div>
 
-        <!-- Advanced Game Simulation Clock (Days, Hours, Minutes) -->
+        <!-- Corrected 90 Days Countdown Clock Engine -->
         <div class="timer-box">
             Election Countdown:<br>
             <span id="game-days">90</span> Days | <span id="game-hours">00</span> Hours | <span id="game-minutes">00</span> Mins
@@ -256,7 +256,7 @@
         president: "",
         vp: "",
         budget: 1000,
-        totalMinutes: 90 * 24 // 90 days total in minutes representation for clock engine
+        remainingMinutes: 90 * 24 * 60 // Exactly 90 days counted in total minutes downwards
     };
 
     let gameTimer = null;
@@ -332,9 +332,10 @@
     }
 
     function updateClockDisplay() {
-        let days = Math.floor(playerData.totalMinutes / (24 * 60));
-        let hours = Math.floor((playerData.totalMinutes % (24 * 60)) / 60);
-        let mins = playerData.totalMinutes % 60;
+        let totalMins = playerData.remainingMinutes;
+        let days = Math.floor(totalMins / (24 * 60));
+        let hours = Math.floor((totalMins % (24 * 60)) / 60);
+        let mins = totalMins % 60;
 
         document.getElementById('game-days').innerText = days;
         document.getElementById('game-hours').innerText = String(hours).padStart(2, '0');
@@ -345,8 +346,8 @@
         if(gameTimer) clearInterval(gameTimer);
 
         gameTimer = setInterval(() => {
-            if(playerData.totalMinutes > 0) {
-                playerData.totalMinutes--;
+            if(playerData.remainingMinutes > 0) {
+                playerData.remainingMinutes--;
                 updateClockDisplay();
             } else {
                 clearInterval(gameTimer);
@@ -370,7 +371,7 @@
             startSimulationClock();
         } else if(speedType === 'fast') {
             document.getElementById('btn-fast').classList.add('active-speed');
-            clockSpeed = 200; // 5x speed (0.2 seconds = 1 game minute)
+            clockSpeed = 200; // 5x speed
             startSimulationClock();
         }
     }
@@ -391,5 +392,5 @@
 </script>
 
 </body>
-    </html>
-            
+            </html>
+                
